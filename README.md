@@ -1,2 +1,0 @@
-# HTA
-HTA (HTML Application)
