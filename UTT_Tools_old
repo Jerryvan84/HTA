@@ -1,0 +1,167 @@
+<html>
+<head>
+<title>UTT Filler Tool</title>
+
+<HTA:APPLICATION
+	ID="COMMDESKTOOL"
+	border="thin"
+	innerborder="no"
+	contextMenu="yes"
+	maximizebutton="no"
+	minimizebutton="no"
+	navigable="no"
+	scroll="no"
+	scrollflat="no"
+	showintaskbar="yes"
+	singleinstance="yes"
+	SysMenu="yes"
+/>
+
+<style type="text/css">
+	input
+	{
+		background: white ;
+		font-family: segoe ui, tahoma, arial; 
+		font-color: red; 
+		border-style: single;
+		border-color: white;
+		border-width: 5;
+	}
+</style>
+
+<script language="vbscript">
+
+	'***PROCEDURE TO UPDATE MCO FIELD AND DISPATCH TIME***
+
+	SUB dispatch
+		dim WshShell
+		set WshShell = CreateObject("WScript.Shell")
+	  	set ArApp = GetObject(, "Remedy.User")
+		set ARForm = ArApp.GetActiveForm
+		
+		'**SETS DISPATCH NOTIFY TO CURRENT TIME**
+
+		if ARForm.GetFieldbyid(536870978).Value = "" then
+			ARForm.GetFieldbyid(536870978).Value = Now
+		end if
+
+		'***CHANGE MCO FIELD TO ASSIGNED TO GROUP***
+
+		if ARForm.GetFieldbyid(536871067).Value = "" then
+			if ARForm.GetFieldbyid(536870937).Value = "Comm Desk" OR ARForm.GetFieldbyid(536870937).Value = "Comm Desk Outage" then
+				MsgBox("Change the assigned to group to OSP region for MCO to be updated")
+			else
+				ARForm.GetFieldbyid(536871067).Value = ARForm.GetFieldbyid(536870937).Value
+			end if
+		end if
+
+		'***CONDITIONALS TO CHECK FOR COMMON GHOST MODEM NODES AND IN HOUSE NODES***
+
+		if ARForm.GetFieldbyid(536870988).Value = "23H015" then
+			MsgBox("This node is commonly a ghost modems node - please double check before dispatching")
+		elseif ARForm.GetFieldbyid(536870988).Value = "21D001" then
+			MsgBox("This node is commonly a ghost modems node - please double check before dispatching")
+		elseif ARForm.GetFieldbyid(536870988).Value = "10T001" then
+			MsgBox("This node is commonly an in house node - please double check before dispatching")
+		elseif ARForm.GetFieldbyid(536870988).Value = "50E201" then
+			MsgBox("This node is commonly an in house node - please double check before dispatching")
+		elseif ARForm.GetFieldbyid(536870988).Value = "INHOUSE1" then
+			MsgBox("This node is commonly an in house node - please double check before dispatching")
+		end if
+
+		if ARForm.GetFieldbyid(536871029).Value <> "Yes" then
+			ARForm.GetFieldbyid(536871029).Value = "No"
+		end if
+	END SUB
+
+	'***PROCEDURE TO QUICKLY FLIP A UTT TO ALL RF***
+
+	SUB flipallrf
+		dim WshShell
+		set WshShell = CreateObject("WScript.Shell")
+	  	set ArApp = GetObject(, "Remedy.User")
+		set ARForm = ArApp.GetActiveForm
+		
+		'***IF ANALOG DEVICE COUNT HAS NO VALUE THEN SET TOT. SUB COUNT TO VALUE FOR ANALOG DEVICE COUNT OTHERWISE SET THAT TO 0***
+
+		if ARForm.GetFieldbyid(536871156).Value = "" then 
+			if ARForm.GetFieldbyid(536871023).Value <> "" then
+				ARForm.GetFieldbyid(536871156).Value = ARForm.GetFieldbyid(536871023).Value  
+			elseif ARForm.GetFieldbyid(536871023).Value = "" then
+				ARForm.GetFieldbyid(536871156).Value = "0"
+			end if
+		end if
+		
+		'***SETS ISSUE TO ALL RF AND ENTERS A DOT IN THE ANALOG FIELD***
+
+		ARForm.GetFieldbyid(536870947).Value = "All RF Services out"
+		ARForm.GetFieldbyid(536870916).Value = "Analog"
+		if ARForm.GetField("Work Log/History").value = "" Then
+			ARForm.GetField("Work Log/History").value = ARForm.GetField("Work Log/History").value & "Comm desk is taking video calls on this outage."
+		else
+			ARForm.GetField("Work Log/History").value = ARForm.GetField("Work Log/History").value & vbclr & "Comm desk is taking video calls on this outage."
+		end if
+	END SUB
+	
+	'SUB DispatchEmail
+	'	dim WshShell
+	'	set WshShell = CreateObject("WScript.Shell")
+	'  	set ArApp = GetObject(, "Remedy.User")
+	'	set ARForm = ArApp.GetActiveForm
+
+	'	Dim objCDO
+	'	Set objCDO = CreateObject("CDO.Message")
+	'	objCDO.Configuration.Fields("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "our smtp server.cablevision.com"
+	'	objCDO.Configuration.Fields("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2
+	'	objCDO.Configuration.Fields("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 25
+	'	objCDO.Configuration.Fields("http://schemas.microsoft.com/cdo/configuration/sendusername") = "username@clicdata.com"
+	'	objCDO.Configuration.Fields("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "password"
+	'	objCDO.Configuration.Fields("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 1
+	'	objCDO.Configuration.Fields("http://schemas.microsoft.com/cdo/configuration/smtpusessl") = true
+	'	objCDO.Configuration.Fields.Update
+
+	'	Set OutlookApp = CreateObject("Outlook.Application")
+	'	Set DispatchMessage = OutlookApp.CreateItem(0) 'olMailItem
+	'	With DispatchMessage
+	'	    .Subject = ARForm.GetField("NOC Ticket #").value & ARForm.GetField("Issue").value & " Node: " & ARForm.GetField("Network Segment").value
+	'	    .ReadReceiptRequested = False
+	'	    .HTMLBody = "Hello, can you please investigate the following UTT?"
+	'	End With
+	'	DispatchMessage.Display
+	'END SUB
+
+	'Weather
+	'<select name="weather" size="1">
+	'	<option value="Normal">Normal</option>
+	'	<option value="Raining">Raining</option>
+	'	<option value="Below Freezing">Below Freezing</option>
+	'	<option value="High Winds">High Winds</option>
+	'	<option value="Sleet/Snow">Sleet/Snow</option>
+	'</select>
+	
+	'***CODE FOR EMAIL TO Send MESSAGES***
+</script>
+
+</head>
+	<body bgcolor="darkgray" topmargin=0 bottommargin=0 leftmargin=0 rightmargin=0>
+		<center>
+			<br>
+			<input  type="button" value="Dispatch" onclick="Dispatch" Title="Enter title here.">
+			<br>
+			<br>
+			<input	type="button" value="  All RF  " onclick="FlipAllRF" Title="Enter title here.">
+			<br>
+			<br>
+			<input	type="button" value="  Email  " onclick="DispatchEmail" Title="Enter title here.">
+			<br>
+			<br>
+			<input	type="button" value="Device/Equipment Affected" onclick="" Title="Enter title here.">
+			<br>
+			<br>
+		</center>
+
+		<script language="vbscript">	
+			resizeTo 300,250
+		</script>
+	</body>
+</html>
