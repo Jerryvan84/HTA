@@ -1,0 +1,1913 @@
+<HTML>
+<HEAD>
+<TITLE>Communications Desk Dashboard</title>
+<HTA:APPLICATION
+  APPLICATIONNAME="Dashboard"
+  ID="20130927"
+  VERSION="1.0"
+  BORDER="thin"
+  INNERBORDER="no"
+  MAXIMIZEBUTTON="no"
+  ICON="Dashboard.ico"
+  SCROLL="no"
+  SCROLLFLAT="yes"
+  SINGLEINSTANCE="yes"
+  CONTEXTMENU="no"
+  SELECTION="no"/>
+  
+<STYLE type="text/css">
+	input
+	{
+		width: 120;
+		height: 18;
+		font-size: 9;
+		padding: 0;
+		line-height: 100%;
+	}
+	.radio
+	{
+		width: 20;
+	}
+	div
+	{
+		text-align: left;
+		border-style: solid;
+		border-width: 0;
+		margin-left: 25;
+	}
+	h1
+	{
+		font-family: Sans-serif;
+		font-size: 12;
+		border-style: outset;
+		border-width:2px;
+	}
+	td
+	{
+		align:top;
+		font-family: Sans-serif;
+		font-size: 12;
+	}
+	tr
+	{
+		vertical-align: top;
+		text-align: center;
+	}
+</STYLE>
+
+</HEAD>
+<SCRIPT LANGUAGE="vbscript">
+	'A tool to accompany the Remedy User Application in order to facilitate in the Comm Desk daily operations
+	'Copyright (C) 2013  Jerryvan Rosado
+
+	Window.resizeTo 580,530	'Width,Height
+	
+	On Error Resume Next
+	Set WshShell = CreateObject("WScript.Shell")
+	Set ArApp = GetObject(,"Remedy.User")
+	
+	'If Err.Number = 429 Then	'Error for not being able to GetObject(,"Remedy.User")
+	'	MsgBox "Please launch the Remedy ARS Application",16,"Remedy not detected"
+	'	Self.close()	'Close the Dashboard
+	'ElseIf Err.Number = -2147467259 Then	'Error for not being able to GetActiveForm()
+	''	MsgBox "Please open a remedy form",48,"No open form detected"
+	'End If
+	
+	Function SchemaValidation(schemaID)	'Function to check what form is open against the form needed
+		If schemaID = "UTT" Then
+			schemaID = "NM-NOC Ticket"
+		ElseIf schemaID = "DSTT" Then
+			schemaID = "DS-Trouble Ticket"
+		ElseIf schemaID = "DSTB" Then
+			schemaID = "DSTB-Ticket"
+		Else
+			SchemaValidation = False
+		End If
+		
+		On Error Resume Next
+		Set ARForm = ArApp.GetActiveForm() 'Testing GetActiveForm() to see what happens
+		
+		If Err.Number = -2147467259 Then	'Error for not being able to GetActiveForm()
+			MsgBox "Please open the " & schemaID & " you wish to use",48
+			SchemaValidation = False
+		ElseIf ARform.GetFormName() <> schemaID Then
+			MsgBox "Please use this function with a " & schemaID,48
+			SchemaValidation = False
+		ElseIf ARform.GetFormName() = schemaID Then
+			SchemaValidation = True
+		End If
+	End Function
+	
+	Sub UTTDispatchOSP()	'***PROCEDURE FLIP FIELDS ON DISPATCH***
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		node = UCase(Trim(ARForm.GetFieldByID(536870988).Value))
+		
+		If node <> "" Then
+			If node = "10C005" Or _
+				node = "10C006" Or _
+				node = "10C008" Or _
+				node = "10C010" Or _
+				node = "10C011" Or _
+				node = "10C012" Or _
+				node = "10C013" Or _
+				node = "10C014" Or _
+				node = "10C015" Or _
+				node = "10C016" Or _
+				node = "10C017" Or _
+				node = "10C018" Or _
+				node = "10C019" Or _
+				node = "10C020" Or _
+				node = "10C021" Or _
+				node = "10C022" Or _
+				node = "10C101" Or _
+				node = "10C102" Or _
+				node = "10C103" Or _
+				node = "10C104" Or _
+				node = "10C107" Or _
+				node = "10C125" Or _
+				node = "10C201" Or _
+				node = "10C202" Or _
+				node = "10C203" Or _
+				node = "10C204" Or _
+				node = "10C207" Or _
+				node = "10C225" Or _
+				node = "10C301" Or _
+				node = "10C401" Or _
+				node = "10D001" Or _
+				node = "10D002" Or _
+				node = "10D003" Or _
+				node = "10D004" Or _
+				node = "10D005" Or _
+				node = "10D006" Or _
+				node = "10D007" Or _
+				node = "10D008" Or _
+				node = "10D009" Or _
+				node = "10D010" Or _
+				node = "10D011" Or _
+				node = "10D012" Or _
+				node = "10D013" Or _
+				node = "10D014" Or _
+				node = "10D015" Or _
+				node = "10D016" Or _
+				node = "10D017" Or _
+				node = "10D018" Or _
+				node = "10D019" Or _
+				node = "10D020" Or _
+				node = "10D021" Or _
+				node = "10D022" Or _
+				node = "10D023" Or _
+				node = "10D024" Or _
+				node = "10D025" Or _
+				node = "10D126" Or _
+				node = "10E008" Or _
+				node = "10E009" Or _
+				node = "10E010" Or _
+				node = "10E011" Or _
+				node = "10E012" Or _
+				node = "10E014" Or _
+				node = "10E015" Or _
+				node = "10E016" Or _
+				node = "10E017" Or _
+				node = "10E018" Or _
+				node = "10E019" Or _
+				node = "10E020" Or _
+				node = "10E021" Or _
+				node = "10E022" Or _
+				node = "10E023" Or _
+				node = "10E024" Or _
+				node = "10E025" Or _
+				node = "10E026" Or _
+				node = "10E027" Or _
+				node = "10E028" Or _
+				node = "10E029" Or _
+				node = "10E030" Or _
+				node = "10E031" Or _
+				node = "10E032" Or _
+				node = "10E034" Or _
+				node = "10E035" Or _
+				node = "10E036" Or _
+				node = "10E113" Or _
+				node = "10E213" Or _
+				node = "10E313" Or _
+				node = "10C023" Or _
+				node = "10E413" Then
+				
+				MsgBox "This is a LIE Node",64,"Careful..."
+				ARForm.GetFieldByID(536870937).Value = "NYMA - OSP LIE"		'Flip Assigned-to Group to NYMA - OSP LIE
+				ARForm.GetFieldByID(536871067).Value = "NYMA - OSP LIE"		'Flip MCO Field to NYMA - OSP LIE
+			End If
+		End If
+		
+		ospRep = InputBox("Whom did you speak to?","Enter Name")
+		If ospRep <> "" Then							'If worklog is blank, enter dispatch comment
+			ARForm.GetFieldByID(536870942).Value =  "Comm Desk advised " & ospRep & " at OSP of this UTT."	'Enter dispatch comment in the worklog.
+		Else
+			Exit Sub
+		End If
+		
+		If ARForm.GetFieldByID(536870988).Value = "21H015" Then		'Check for Ghost Modems
+			MsgBox "This node is commonly a ghost modems node - please double check before dispatching",64
+		ElseIf ARForm.GetFieldByID(536870988).Value = "23H015" Then
+			MsgBox "This node is commonly a ghost modems node - please double check before dispatching",64
+		ElseIf ARForm.GetFieldByID(536870988).Value = "20G040" Then
+			MsgBox "This node is commonly a ghost modems node - please double check before dispatching",64
+		ElseIf ARForm.GetFieldByID(536870988).Value = "20A065" Then
+			MsgBox "This node is commonly a ghost modems node - please double check before dispatching",64
+		ElseIf ARForm.GetFieldByID(536870988).Value = "21D001" Then
+			MsgBox "This node is commonly a ghost modems node - please double check before dispatching",64
+		ElseIf ARForm.GetFieldByID(536870988).Value = "10T001" Then
+			MsgBox "This node is commonly an in house node - please double check before dispatching",64
+		ElseIf ARForm.GetFieldByID(536870988).Value = "50E201" Then
+			MsgBox "This node is commonly an in house node - please double check before dispatching",64
+		ElseIf ARForm.GetFieldByID(536870988).Value = "INHOUSE1" Then
+			MsgBox "This node is commonly an in house node - please double check before dispatching",64
+		End If
+
+		If ARForm.GetFieldByID(536870947).Value = "WIFI Device Not Responding" Then	'If it's a Wifi ticket, check for blank Network Segment field, Copy to Device Name/Designation field
+			If ARForm.GetFieldByID(536870988).Value = "" Then
+				ARForm.GetFieldByID(536870988).Value = ARForm.GetFieldByID(536870967).Value
+			End If
+		End If
+		If ARForm.GetFieldByID(536870961).Value = "" Then	'Set the weather to normal
+			ARForm.GetFieldByID(536870961).Value = "Normal"
+		End If
+		If ARForm.GetFieldByID(536870978).Value = "" Then	'If Dispatch Notify time blank, set the Dispatch Notify
+			ARForm.GetFieldByID(536870978).Value = Now
+		End If
+		If ARForm.GetFieldByID(536871037).Value = "" Then	'If Territory is blank, set it to Optimum East
+			ARForm.GetFieldByID(536871037).Value = "Optimum East"
+		End If
+		If ARForm.GetFieldByID(536871079).Value = "" Then	'Check the Start Date to see if it's blank
+			MsgBox "Please enter a 'Start Date'",48
+		Else
+			ARForm.GetFieldByID(536870939).Value = DateAdd("n",15,CDate(ARForm.GetFieldByID(536871079).Value))	'Est Arrival Time
+			ARForm.GetFieldByID(536870913).Value = DateAdd("h",2,CDate(ARForm.GetFieldByID(536871079).Value))	'Est Repair Time
+			ARForm.GetFieldByID(536870977).Value = "15"								'EstArrivalMinutes
+			ARForm.GetFieldByID(536871078).Value = "2"								'EstRepairHours
+		End If
+		If ARForm.GetFieldByID(536870918).Value = "OV" Then	'Check the OV radio
+			ARForm.GetFieldByID(536871160).Value = "VoIP"	'Assign Sup Prod to VoIP
+		End If
+		
+		Call FlipOSPFields()	'Flip the group assigning fields accordingly
+		Call DevNmeDesgSendKeyENTER()	'Hit the "Enter" key on the Device Name/Designation field
+	End Sub
+	
+	Sub DevNmeDesgSendKeyENTER()
+		On Error Resume Next
+		Set ARForm = ArApp.GetActiveForm()		'We need to keep refreshing to see what the active form is
+		WshShell.AppActivate "Remedy User"		'Set the focus on Remedy
+		ARForm.GiveFieldFocusById("536870967")	'Focus on the Device Name/Designation field
+		WshShell.SendKeys "{ENTER}"				'Hit the Enter key here
+	End Sub
+	
+	Sub FlipOSPFields()	'Flips all the assignment fields to the designated OSP group according to the Area location
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		If ARForm.GetFieldByID(536870955).Value = "Connecticut" Then	'Flip the Assign-To Group accordingly
+			ARForm.GetFieldByID(536870937).Value = "NYMA - OSP CON"
+			ARForm.GetFieldByID(536871067).Value = "NYMA - OSP CON"
+		ElseIf ARForm.GetFieldByID(536870955).Value = "New York City" Then
+			ARForm.GetFieldByID(536870937).Value = "NYMA - OSP NYC"
+			ARForm.GetFieldByID(536871067).Value = "NYMA - OSP NYC"
+		ElseIf ARForm.GetFieldByID(536870955).Value = "Westchester" Then
+			ARForm.GetFieldByID(536870937).Value = "NYMA - OSP WES"
+			ARForm.GetFieldByID(536871067).Value = "NYMA - OSP WES"
+		ElseIf ARForm.GetFieldByID(536870955).Value = "Long Island East" Then
+			ARForm.GetFieldByID(536870937).Value = "NYMA - OSP LIE"
+			ARForm.GetFieldByID(536871067).Value = "NYMA - OSP LIE"
+		ElseIf ARForm.GetFieldByID(536870955).Value = "Long Island West" Then
+			ARForm.GetFieldByID(536870937).Value = "NYMA - OSP LIW"
+			ARForm.GetFieldByID(536871067).Value = "NYMA - OSP LIW"
+		ElseIf ARForm.GetFieldByID(536870955).Value = "New Jersey North" Then
+			ARForm.GetFieldByID(536870937).Value = "NYMA - OSP NNJ"
+			ARForm.GetFieldByID(536871067).Value = "NYMA - OSP NNJ"
+		ElseIf ARForm.GetFieldByID(536870955).Value = "New Jersey South" Then
+			ARForm.GetFieldByID(536870937).Value = "NYMA - OSP SNJ"
+			ARForm.GetFieldByID(536871067).Value = "NYMA - OSP SNJ"
+		ElseIf ARForm.GetFieldByID(536870955).Value = "ALL" Then
+			MsgBox "Area field is set to ALL",64
+		Else
+			MsgBox "Area field is blank or invalid to dispatch",16
+		End If
+	End Sub
+	
+	Sub DSTTFlipToShelton()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870963).Value = "Comm Desk/TSG Escalated Ticket"	'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Work In Progress"						'Status
+		ARForm.GetFieldByID(4).Value = "Shelton Follow-up"						'Assigned-to
+		ARForm.GetFieldByID(536871019).Value = "Shelton"						'Call Center
+	End Sub
+	
+	Sub DSTTFlipToJericho()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870963).Value = "Comm Desk/TSG Escalated Ticket"	'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Work In Progress"						'Status
+		ARForm.GetFieldByID(4).Value = "Jericho Follow-up"						'Assigned-to
+		ARForm.GetFieldByID(536871019).Value = "Woodbury/LI"					'Call Center
+	End Sub
+	
+	Sub DSTTFlipToBISC()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870963).Value = "BISC Onsite"		'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Assign"						'Status
+		ARForm.GetFieldByID(4).Value = "Refer to BISC On-Site OOL"	'Assigned-to
+	End Sub
+	
+	Sub DSTTFlipToEMedia()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870963).Value = "eMedia"		'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Assign"				'Status
+		ARForm.GetFieldByID(4).Value = "eMedia"				'Assigned-to
+	End Sub
+	
+	Sub DSTTFlipToCommDesk()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870963).Value = "NYMA Comm. Desk"	'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Closed"						'Status
+		ARForm.GetFieldByID(4).Value = "NYMA  Comm Desk"			'Assigned-to
+	End Sub
+	
+	Sub DSTTIpadNoAudio()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870963).Value = "Comm Desk/TSG Escalated Ticket"	'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Work In Progress"						'Status
+		ARForm.GetFieldByID(536870941).Value = "OOL"							'Ticket Type
+		ARForm.GetFieldByID(536871026).Value = "Issue can be resolved by toggling the mute switch on the iPad (turning it on or off)." & vbNewLine & "If this does not work, there is an option in the ipad under general settings that allows a sub to set the side switch to mute or lock rotation." & vbNewLine & vbNewLine & "Please ask the sub to switch the option back to mute and un-mute the device while inside the Optimum Application."	'Work Log
+	End Sub
+	
+	Sub DSTTPCWhiteScreen()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870963).Value = "Comm Desk/TSG Escalated Ticket"	'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Work In Progress"						'Status
+		ARForm.GetFieldByID(536870941).Value = "OOL"							'Ticket Type
+		ARForm.GetFieldByID(536871026).Value = "- Uninstall the app" & vbNewLine & "- Retry the test stream at optimum.net/laptop" & vbNewLine & "- Retry the app" & vbNewLine & "- If the issue persists, disable any internet security, antivirus, or optional apps that may be interfering with the Optimum app" & vbNewLine & "- Restart the computer" & vbNewLine & "- Retry the app" & vbNewLine & "- Delete the Settings folder in ~/Documents/cvcoptdata if it exists" & vbNewLine & "- Relaunch the app"	'Work Log
+	End Sub
+	
+	Sub DSTTPCNetConn()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870963).Value = "Comm Desk/TSG Escalated Ticket"	'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Work In Progress"						'Status
+		ARForm.GetFieldByID(536870941).Value = "OOL"							'Ticket Type
+		ARForm.GetFieldByID(536871026).Value = "Please ask the sub to go to Documents and delete the cvcoptdata folder and relaunch the app to retry." & vbNewLine & "" & vbNewLine & "If the issue persists, ask the sub to go to:" & vbNewLine & "C:\ProgramData\Microsoft\PlayReady and delete the mspr.hds file." & vbNewLine & "" & vbNewLine & "Then relaunch the app and retry."	'Work Log
+	End Sub
+	
+	Sub DSTTPCExtDisplay()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870963).Value = "Comm Desk/TSG Escalated Ticket"	'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Work In Progress"						'Status
+		ARForm.GetFieldByID(536870941).Value = "OOL"							'Ticket Type
+		ARForm.GetFieldByID(536871026).Value = "Please follow the troubleshooting steps below:" & vbNewLine & "" & vbNewLine & "1) Confirm that they are using a laptop/netbook/all-in-one integrated device without any external displays connected." & vbNewLine & "2) If the sub is using remote desktop to access the PC that encountered the error, advise the sub to access the PC directly and retry." & vbNewLine & "3) If the sub is using a virtual machine, advise the sub to run the test stream from the host machine, directly on the physical device's operating system (assuming it is a supported OS), instead of the virtual machine and retry" & vbNewLine & "4) If the sub has non-standard video output connections on their system (ie USB-to-DVI adapter for an external monitor) , advise the sub to physically remove the connection from the device and  retry.  They may also need to terminate any accompanying software that the adapter requires." & vbNewLine & "5) Ensure that they are on the latest version of Silverlight by visiting http://microsoft.com/getsilverlight, upgrade if necessary and retry." & vbNewLine & "6) If the sub is running an anti-virus or internet security application when they received the error, advise the -sub to disable the application and retry." & vbNewLine & "7) If the issue persists, ask the sub to upgrade their graphics drivers and retry." & vbNewLine & "If the issue persists, ask the sub to update their system drivers and retry."
+	End Sub
+	
+	Sub DSTTPCError3222()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870963).Value = "Comm Desk/TSG Escalated Ticket"	'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Work In Progress"						'Status
+		ARForm.GetFieldByID(536870941).Value = "OOL"							'Ticket Type
+		ARForm.GetFieldByID(536871026).Value = "- Clear the internet cache in Internet Explorer" & vbNewLine & "- Uninstall the Optimum app" & vbNewLine & "- Uninstall Silverlight" & vbNewLine & "- Reboot the computer" & vbNewLine & "- Install Silverlight 5 at microsoft.com/getsilverlight" & vbNewLine & "- Ensure the sub didn't install using an old file" & vbNewLine & "- Install the Optimum app at optimum.net/laptop" & vbNewLine & "- Ensure the sub didn't install using an old file" & vbNewLine & "- If the issue persists, repeat these steps using a different browser" & vbNewLine & "- If the issue continues to persists, install the app at optimum.net/AppUpgrade"
+	End Sub
+
+	Sub ReadyUTT2Close()	'This is THE procedure to check everything on a UTT and ready it for closure
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		If ARForm.GetFieldByID(536871029).Value = "" Then
+			ARForm.GetFieldByID(536871029).Value = "No"					'Does Issue Require an RCA?
+		End If
+		If ARForm.GetFieldByID(536870961).Value = "" Then
+			ARForm.GetFieldByID(536870961).Value = "Normal"				'Weather Conditions OSP
+		End If
+		If ARForm.GetFieldByID(536871033).Value = "" Then
+			ARForm.GetFieldByID(536871033).Value = "No"					'PS Equipment Replaced
+		End If
+		If ARForm.GetFieldByID(536871170).Value = "" Then
+			ARForm.GetFieldByID(536871170).Value = "NA"					'Power Supply Status
+		End If
+		If ARForm.GetFieldByID(536871062).Value = "" Then
+			ARForm.GetFieldByID(536871062).Value = "0"					'Call Volume if empty to default
+		End If
+		If ARForm.GetFieldByID(536871067).Value = "" Then				'Check the MCO Field 
+			tempVar = ARForm.GetFieldByID(536870937).Value
+			Call FlipOSPFields()
+			ARForm.GetFieldByID(536870937).Value = tempVar
+		End If
+		If ARForm.GetFieldByID(536870960).Value = "" Or ARForm.GetFieldByID(536870964).Value = "" Or ARForm.GetFieldByID(536870978).Value = "" Then	'Check Tech ID, Tech Notify, and Disp Not. and prompt us which is missing.
+			num = 1
+			If ARForm.GetFieldByID(536870960).Value = "" Then							'Tech ID
+				tempString = num & ". " & "Tech ID   "
+				num = num + 1
+			End If
+			If ARForm.GetFieldByID(536870964).Value = "" Then							'Tech Notify
+				tempString = tempString & vbNewLine & num & ". " & "Tech Notify   "
+				num = num + 1
+			End If
+			If ARForm.GetFieldByID(536870978).Value = "" Then							'Dispatch Notify
+				tempString = tempString & vbNewLine & num & ". " & "Dispatch Notify   "
+				num = num + 1
+			End If
+			MsgBox tempString,48,"Missing Information"
+		End If
+		If ARForm.GetFieldByID(536870937).Value <> "NYMA - NOC" Then	'This was set for the case where a ticket has to go to the NOC
+			ARForm.GetFieldByID(536870937).Value = "Comm Desk"
+		End If
+		If ARForm.GetFieldByID(536871037).Value = "" Then								'If Territory is STILL blank, then set it to Optimum East
+			ARForm.GetFieldByID(536871037).Value = "Optimum East"
+		End If
+		If ARForm.GetFieldByID(536870947).Value = "WIFI Device Not Responding" Then	'If it's a Wifi ticket, check for blank Network Segment field, Copy to Device Name/Designation field
+			If ARForm.GetFieldByID(536870988).Value = "" Then
+				ARForm.GetFieldByID(536870988).Value = ARForm.GetFieldByID(536870967).Value
+			End If
+		End If
+		If ARForm.GetFieldByID(536870916).value = "Analog" Then							'Analog Radio Button
+			If ARForm.GetFieldByID(536871023).Value = CStr(0) Or ARForm.GetFieldByID(536871023).Value = "" Then	'Total subs Is > 0
+				totSubs = Trim(InputBox("Enter the Total Subs Affected:","Subscribers Affected"))
+				If totSubs <> "" Then
+					ARForm.GetFieldByID(536871023).Value = totSubs						'Total subs
+					ARForm.GetFieldByID(536871156).Value = totSubs						'Analog Device Count
+				End If
+			Else
+				ARForm.GetFieldByID(536871156).Value = ARForm.GetFieldByID(536871023).Value	'Analog Device Count = Total Subs
+			End If
+		End If
+		If ARForm.GetFieldByID(536871079).Value = "" Then	'Check the Start Date to see if it's blank
+			MsgBox "Please enter a 'Start Date'",16
+		Else
+			ARForm.GetFieldByID(536870939).Value = DateAdd("n",15,CDate(ARForm.GetFieldByID(536871079).Value))	'Est Arrival Time
+			ARForm.GetFieldByID(536870913).Value = DateAdd("h",2,CDate(ARForm.GetFieldByID(536871079).Value))	'Est Repair Time
+			ARForm.GetFieldByID(536870977).Value = "15"															'EstArrivalMinutes
+			ARForm.GetFieldByID(536871078).Value = "2"															'EstRepairHours
+		End If
+		If ARForm.GetFieldByID(536870972).Value = "" Or ARForm.GetFieldByID(536870922).Value = "" Then					'If both arrival and repair are blank the ask to enter default values
+			If MsgBox("Would you like to use default Arrival and/or Repair Times?",4+32, "Question...") = 6 Then		'6 means Yes
+				If ARForm.GetFieldByID(536870972).Value = ""  And ARForm.GetFieldByID(536871079).Value <> "" Then		'Actual Arrival Time AND Start Time
+					ARForm.GetFieldByID(536870972).Value = DateAdd("n",1,CDate(ARForm.GetFieldByID(536871079).Value))	'Actual Arrival Time
+				End If
+				If ARForm.GetFieldByID(536870922).Value = "" Then
+					ARForm.GetFieldByID(536870922).Value = Now															'Actual Repair Time
+				End If
+			End If
+		End If
+		If ARForm.GetFieldByID(536870972).Value <> "" Then
+			ARForm.GiveFieldFocusById("536870972")
+			WshShell.SendKeys "{ENTER}"
+		End If
+		If ARForm.GetFieldByID(536870922).Value <> "" Then
+			ARForm.GiveFieldFocusById("536870922")
+			WshShell.SendKeys "{ENTER}"
+		End If
+		If ARForm.GetFieldByID(536870988).Value <> "" Then
+			ARForm.GetFieldByID(536870943).Value = "RF Node"							'Hard-coded Device/Equipment Affected: Type
+			ARForm.GetFieldByID(536870967).Value = ARForm.GetFieldByID(536870988).Value	'Device/Name Desig.	= Network Segment
+			Call DevNmeDesgSendKeyENTER()
+		Else
+			MsgBox "Network Segment field is blank",48
+		End If
+		If ARForm.GetFieldByID(536871113).Value = "" Then	'Check the Alert Type
+			If MsgBox("Was this UTT opened based on call volume?",4+32, "Question...") = 6 Then	'6 means Yes
+				ARForm.GetFieldByID(536871113).Value = "Call Volume"
+			Else
+				ARForm.GetFieldByID(536871113).Value = "NOC Alarm"
+			End If
+		End If
+		If ARForm.GetFieldByID(536870918).Value = "OV" And ARForm.GetFieldByID(536871160).Value = "" Then	'Check OV radio and Sup Prod field
+			ARForm.GetFieldByID(536871160).Value = "VoIP"													'Assign Sup Prod to VoIP
+		End If
+	End Sub
+
+	Sub UTTNoise
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870937).Value = "Comm Desk"						'Assigned-to Group
+		ARForm.GetFieldByID(536870946).Value = "Ingress/Egress/Babbling box" 	'Cause
+		ARForm.GetFieldByID(536870962).Value = "Balanced"						'Resolution
+		ARForm.GetFieldByID(536870948).Value = "Ingress/Noise"					'Cause Detail / Diagnosis
+		ARForm.GetFieldByID(536870963).Value = "Padded/Disconnected Drop"		'Resolution Description
+		
+		Call ReadyUTT2Close()	'Ready the UTT for closing
+	End Sub
+	
+	Sub UTTPowerRelated
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870937).Value = "Comm Desk"								'Assigned-to Group
+		ARForm.GetFieldByID(536870946).Value = "Utility power outage - Plant Active"	'Cause
+		ARForm.GetFieldByID(536870962).Value = "Service Restored by Utility"			'Resolution
+		ARForm.GetFieldByID(536870948).Value = "Utility power outage"					'Cause Detail / Diagnosis
+		ARForm.GetFieldByID(536870963).Value = "Power Restored"							'Resolution Description
+		
+		Call ReadyUTT2Close()
+	End Sub
+	
+	Sub UTTEquipReplaced
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		equipStr = InputBox("Enter the equipment or part that was replaced:","Equipment Replaced")
+		If equipStr = "" Then
+			Exit Sub
+		End If
+		
+		ARForm.GetFieldByID(536870937).Value = "Comm Desk"							'Assigned-to Group
+		ARForm.GetFieldByID(536870946).Value = "Equipment module failed"			'Cause
+		ARForm.GetFieldByID(536870962).Value = "Equipment Replaced"					'Resolution
+		ARForm.GetFieldByID(536870948).Value = equipStr & " module has failed"	'Cause Detail / Diagnosis
+		ARForm.GetFieldByID(536870963).Value = "The " & equipStr & " module has been replaced" 'Resolution Description
+
+		Call ReadyUTT2Close()	'Ready the UTT for closing
+	End Sub
+	
+	Sub UTTTapPlate()
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870937).Value = "Comm Desk"									'Assigned-to Group
+		ARForm.GetFieldByID(536870946).Value = "Tap - Failure"								'Cause
+		ARForm.GetFieldByID(536870962).Value = "Equipment Replaced"							'Resolution
+		ARForm.GetFieldByID(536870948).Value = "Tap plate failure."							'Cause Detail / Diagnosis
+		ARForm.GetFieldByID(536870963).Value = "Tech replaced the tap plate to resolve."	'Resolution Description
+		
+		Call ReadyUTT2Close()	'Ready the UTT for closing
+	End Sub
+	
+	Sub UTTNtfNtr
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870937).Value = "Comm Desk"									'Assigned-to Group
+		ARForm.GetFieldByID(536870946).Value = "Proactive criteria not met to escalate"		'Cause
+		ARForm.GetFieldByID(536870962).Value = "NTF, Proactive Criteria Not Met"			'Resolution
+		ARForm.GetFieldByID(536870948).Value = "Proactive criteria not met to escalate"		'Cause Detail / Diagnosis
+		ARForm.GetFieldByID(536870963).Value = "NTF, Proactive Criteria Not Met"			'Resolution Description
+		ARForm.GetFieldByID(536871205).Value = "None"										'Outage/Impairment
+		
+		Call ReadyUTT2Close()
+	End Sub
+	
+	Sub UTTNtfOsp
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870937).Value = "Comm Desk"									'Assigned-to Group
+		ARForm.GetFieldByID(536870946).Value = "Reactive criteria not met to escalate"		'Cause
+		ARForm.GetFieldByID(536870962).Value = "NTF, Reactive Criteria Not Met"				'Resolution
+		ARForm.GetFieldByID(536870948).Value = "Reactive criteria not met to escalate"		'Cause Detail / Diagnosis
+		ARForm.GetFieldByID(536870963).Value = "NTF, Reactive Criteria Not Met"				'Resolution Description
+		ARForm.GetFieldByID(536871205).Value = "None"										'Outage/Impairment
+
+		Call ReadyUTT2Close()
+	End Sub
+	
+	Sub UTTPsSwap
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		MsgBox "Power Supply detailed information is required",64
+		ARForm.GetFieldByID(536870937).Value = "NYMA - NOC"							'Assigned-to Group
+		ARForm.GetFieldByID(536870946).Value = "PS Module Failure (Transponder)"	'Cause
+		ARForm.GetFieldByID(536870962).Value = "Equipment Replaced"					'Resolution
+		ARForm.GetFieldByID(536870948).Value = "PS Module Failure (Transponder)"	'Cause Detail / Diagnosis
+		ARForm.GetFieldByID(536870963).Value = "Defective Power Supply"				'Resolution Description
+		ARForm.GetFieldByID(536871033).Value = "Yes"
+		ARForm.GetFieldByID(536870942).Value =  "The following Power Supply information is required:" & vbNewLine & vbNewLine & "Device Field Information: " & vbNewLine & "Street: " & vbNewLine & "Cross Street: " & vbNewLine & "Pole#: " & vbNewLine & "Node: " & vbNewLine & "PS #: " & vbNewLine & "PS Type/Volts: " & vbNewLine & "# of Batteries: " & vbNewLine & "Transponder Addr.(New): " & vbNewLine & "Transponder Addr.(Old): " & vbNewLine & "Transponder Type: Omni, CheetahXD (Docsis) or CheetahNet: " & vbNewLine & "Tech: " & vbNewLine & "Supervisor: "
+
+		Call ReadyUTT2Close()	'Ready the UTT for closing
+	End Sub
+	
+	Sub UTTMaint
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870937).Value = "Comm Desk"				'Assigned-to Group
+		ARForm.GetFieldByID(536870946).Value = "Maintenance"			'Cause
+		ARForm.GetFieldByID(536870962).Value = "Maintenance Complete"	'Resolution
+		ARForm.GetFieldByID(536870948).Value = "Maintenance"			'Cause Detail / Diagnosis
+		ARForm.GetFieldByID(536870963).Value = "Maintenance Complete"	'Resolution Description
+		
+		Call ReadyUTT2Close()	'Ready the UTT for closing
+		
+		If MsgBox("Do you have a CTS ID for the Maintenance?",4+32, "Question...") = 6 Then
+			ctsID = Trim(InputBox("Enter the CTS ID of the Maintenance","CTS ID"))
+			
+			ARForm.GetFieldByID(536870948).Value = "Planned Maintenance CTS ID: " & ctsID	'Cause Detail / Diagnosis
+			ARForm.GetFieldByID(536870963).Value = "Planned Maintenance CTS ID: " & ctsID	'Resolution Description
+		End If
+	End Sub
+	
+	Sub UTTWifiReset
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870937).Value = "Comm Desk"							'Assigned-to Group
+		ARForm.GetFieldByID(536870946).Value = "WiFi AP Failure - Docsis Module"	'Cause
+		ARForm.GetFieldByID(536870962).Value = "Equipment Rebooted"					'Resolution
+		ARForm.GetFieldByID(536870948).Value = "Offline Wifi Unit"					'Cause Detail / Diagnosis
+		ARForm.GetFieldByID(536870963).Value = "Unit Rebooted"						'Resolution Description
+
+		Call ReadyUTT2Close()	'Ready the UTT for closing
+	End Sub
+	
+	Sub UTTWifiSwap
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		macAddress = UCase(Trim(InputBox("Enter the MAC Address of the new Modem:","Modem MAC")))
+		If macAddress = "" Then
+			Exit Sub
+		End If
+		
+		ARForm.GetFieldByID(536870937).Value = "NYMA - NOC"								'Assigned-to Group
+		ARForm.GetFieldByID(536870946).Value = "WiFi AP Failure - Docsis Module"		'Cause
+		ARForm.GetFieldByID(536870962).Value = "Equipment Replaced"						'Resolution
+		ARForm.GetFieldByID(536870948).Value = "Newly Replaced MAC: " & macAddress		'Cause Detail / Diagnosis
+		ARForm.GetFieldByID(536870963).Value = "Newly Replaced MAC: " & macAddress		'Resolution Description
+		ARForm.GetFieldByID(536870942).Value = "The Wifi unit has been swapped for unit with the MAC " & macAddress & "."	'Work Log
+
+		Call ReadyUTT2Close()	'Ready the UTT for closing
+	End Sub
+	
+	Sub UTTRelatedTo()
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		uttNum = Trim(InputBox("What's the UTT this ticket is being related to?","UTT Number"))
+
+		ARForm.GetFieldByID(536870948).Value = "This UTT is related to " & uttNum & "." 					'Cause Detail/Diagnosis
+		ARForm.GetFieldByID(536870963).Value = "This UTT is related to " & uttNum & "."						'Resolution Description
+		ARForm.GetFieldByID(536870946).Value = "Related to Parent Ticket"									'Cause
+		ARForm.GetFieldByID(536870962).Value = "Related to parent/duplicate ticket"							'Resolution
+		ARForm.GetFieldByID(536870972).Value = DateAdd("n",1,CDate(ARForm.GetFieldByID(536871079).Value))	'Actual Arrival Time
+		ARForm.GetFieldByID(536870922).Value = DateAdd("n",1,CDate(ARForm.GetFieldByID(536871079).Value))	'Actual Repair Time
+		ARForm.GetFieldByID(536871205).Value = "None"														'Outage/Impairment
+		ARForm.GetFieldByID(536871062).Value = "0"
+		
+		Call ReadyUTT2Close()	'Ready the UTT for closing
+	End Sub
+	
+	Sub RunQuery(querySchema, queryStr)	'Single procedure in charge of writing the ARTask file and launching it
+		Dim filesysobject, Query
+   		Set filesysobject = CreateObject("Scripting.FileSystemObject")
+   		Set Query = filesysobject.CreateTextFile("C:\Query.ARTask", True)
+   		Query.WriteLine("[Shortcut]" _
+   			 & vbNewLine & "Name = " & querySchema _
+   			 & vbNewLine & "Type = 1" _
+   			 & vbNewLine & "Server = UTTREM" _
+   			 & vbNewLine & "Join = 0" _
+   			 & vbNewLine & "QBE Data = " _
+   			 & vbNewLine & "Search String = " & queryStr)
+   		Query.Close
+   		WshShell.Run("C:\Query.ARTask")
+	End Sub
+	
+	Sub MACROOOLiO()	'Create macro file and launch it
+		Call RunQuery("NM-NOC Ticket","'Status' != " & chr(34) & "Closed" & chr(34) & " AND ('Create-date' >= " & chr(34) & "0:00" & chr(34) & " AND NOT ('Issue' LIKE " & chr(34) & "%OSP%" & chr(34) & " OR 'Issue' LIKE " & chr(34) & "%Status%" & chr(34) & " OR 'Issue' LIKE " & chr(34) & "%RPM%" & chr(34) & " OR 'Issue' LIKE " & chr(34) & "WIFI%" & chr(34) & ")) OR ('536870937' = " & chr(34) & "Comm Desk" & chr(34) & " AND '536870947' LIKE " & chr(34) & "WIFI%" & chr(34) & ")")
+	End Sub
+	
+	Sub MACROOnComm()
+		Call RunQuery("NM-NOC Ticket","'Status' != " & chr(34) & "Closed" & chr(34) & " AND '536870937' = " & chr(34) & "Comm Desk" & chr(34))
+	End Sub
+	
+	Sub AssignDSTTDefaultCustomer()	'Check DSTT tickets and if home phone is blank, enter the default 516-803-0608
+		Set ARForm = ArApp.GetActiveForm()	'We need to keep refreshing the active form is
+		If ARForm.GetFieldByID(536870929).Value = "" Then
+			ARForm.GetFieldByID(536870921).Value = "0014E839F560"			'MAC Address+
+			ARForm.GetFieldByID(536871053).Value = "10Z201"					'Node
+			ARForm.GetFieldByID(536871057).Value = "IPT0000000000"			'IPT/OV#
+			ARForm.GetFieldByID(536871024).Value = "Residence"				'Customer Type
+			ARForm.GetFieldByID(536870999).Value = "127.0.0.1"				'IP Address
+			ARForm.GetFieldByID(536870973).Value = "7801"					'CableData Corp/
+			ARForm.GetFieldByID(536870945).Value = "11753-2701"				'Zip
+			ARForm.GetFieldByID(536870944).Value = "NY"						'State
+			ARForm.GetFieldByID(536870943).Value = "Jericho"				'City
+			ARForm.GetFieldByID(536870931).Value = "470412-1"				'Account+
+			ARForm.GetFieldByID(536870929).Value = "516-803-0608"			'Home Phone+
+			If ARForm.GetFieldByID(536870921).Value = "" Then ARForm.GetFieldByID(536870921).Value = "000000000000"	'MAC Address+
+			ARForm.GetFieldByID(536870917).Value = "200 JERICHO QUAD"		'Address
+			ARForm.GetFieldByID(536870914).Value = "COMM DESK"				'Last Name
+			ARForm.GetFieldByID(536870913).Value = "JERICHO"				'First Name
+		End If
+	End Sub
+	
+	Sub DSTTGenericVdo()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870963).Value = "NYMA Comm. Desk"										'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Closed"															'Status
+		ARForm.GetFieldByID(8).Value = "Generic Communications Desk Ticket"								'Issue Description
+		ARForm.GetFieldByID(536870941).Value = "OOL"													'Ticket Type
+		ARForm.GetFieldByID(536870916).Value = "General Inquiry"										'Issue Code
+		ARForm.GetFieldByID(536871032).Value = "General Service Questions"								'Cause Code
+		ARForm.GetFieldByID(536871041).Value = "Resolved - Commdesk"									'Resolution Code - 1
+		ARForm.GetFieldByID(536870912).Value = ""														'Resolution Code - 2
+		If ARForm.GetFieldByID(536870954).Value = "" Then	'Avoid erasing the info already here
+			ARForm.GetFieldByID(536870954).Value = "Caller: " & vbNewLine & "Location: "					'Cause Description
+		End If
+		ARForm.GetFieldByID(536870955).Value = "<< See Work Log >>"										'Resolution Descript.
+
+		Call AssignDSTTDefaultCustomer()
+	End Sub
+	
+	Sub DSTTModemWalled()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		macAddress = Trim(InputBox("Please enter the MAC Address of the Walled modem:","Modem MAC"))
+		If macAddress = "" Then
+			Exit Sub
+		End If
+		
+		ARForm.GetFieldByID(536870963).Value = "NYMA Comm. Desk"											'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Closed"																'Status
+		ARForm.GetFieldByID(8).Value = "Modem Walled Garden"												'Issue Description
+		ARForm.GetFieldByID(536870941).Value = "OOL"														'Ticket Type
+		ARForm.GetFieldByID(536870916).Value = "Provisioning Issue"											'Issue Code
+		ARForm.GetFieldByID(536871032).Value = "OOL Provisioning Error"										'Cause Code
+		ARForm.GetFieldByID(536871041).Value = "Resolved - Commdesk"										'Resolution Code - 1
+		ARForm.GetFieldByID(536870912).Value = ""															'Resolution Code - 2
+		If ARForm.GetFieldByID(536870954).Value = "" Then	'Avoid erasing the info already here
+			ARForm.GetFieldByID(536870954).Value = "Caller: " & vbNewLine & "Location: "					'Cause Description
+		End If
+		ARForm.GetFieldByID(536870955).Value = "<< See Work Log >>"											'Resolution Descript.
+		ARForm.GetFieldByID(536871026).Value = "Modem with MAC " & macAddress & " requires to be unwalled."	'Work Log
+		ARForm.GetFieldByID(536870921).Value = macAddress
+		
+		Call AssignDSTTDefaultCustomer()
+		
+		ARForm.GetFieldByID(536870921).Value = macAddress
+	End Sub
+	
+	Sub DSTTTwoUBRsOneModem()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		macAddress = Trim(InputBox("Please enter the MAC Address of the Modem with the two UBRs:","Modem MAC"))
+		If macAddress = "" Then
+			Exit Sub
+		End If
+		
+		ARForm.GetFieldByID(536870963).Value = "NYMA Comm. Desk"										'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Closed"															'Status
+		ARForm.GetFieldByID(8).Value = "Modem Walled Garden"											'Issue Description
+		ARForm.GetFieldByID(536870941).Value = "OOL"													'Ticket Type
+		ARForm.GetFieldByID(536870916).Value = "Provisioning Issue"										'Issue Code
+		ARForm.GetFieldByID(536871032).Value = "Modem Polling on 2 uBRs"								'Cause Code
+		ARForm.GetFieldByID(536871041).Value = "Resolved - NOC"											'Resolution Code - 1
+		ARForm.GetFieldByID(536870912).Value = ""														'Resolution Code - 2
+		If ARForm.GetFieldByID(536870954).Value = "" Then	'Avoid erasing the info already here
+			ARForm.GetFieldByID(536870954).Value = "Caller: " & vbNewLine & "Location: "					'Cause Description
+		End If
+		ARForm.GetFieldByID(536870955).Value = "<< See Work Log >>"										'Resolution Descript.
+		ARForm.GetFieldByID(536871026).Value = "Modem with MAC " & macAddress & " has two UBRs."		'Work Log
+		ARForm.GetFieldByID(536870921).Value = macAddress
+		
+		Call AssignDSTTDefaultCustomer()
+	End Sub
+	
+	Sub DSTT911Clearance()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870963).Value = "NYMA Comm. Desk"										'Assigned-to Group
+		ARForm.GetFieldByID(7).Value = "Closed"															'Status
+		ARForm.GetFieldByID(8).Value = "911 Clearance Request"											'Issue Description
+		ARForm.GetFieldByID(536870941).Value = "OOL"													'Ticket Type
+		ARForm.GetFieldByID(536870916).Value = "General Inquiry"										'Issue Code
+		ARForm.GetFieldByID(536871032).Value = "911 Clearance"											'Cause Code
+		ARForm.GetFieldByID(536871041).Value = ""														'Resolution Code - 1
+		ARForm.GetFieldByID(536870912).Value = ""														'Resolution Code - 2
+		If ARForm.GetFieldByID(536870954).Value = "" Then	'Avoid erasing the info already here
+			ARForm.GetFieldByID(536870954).Value = "Caller: " & vbNewLine & "Location: "					'Cause Description
+		End If
+		ARForm.GetFieldByID(536870955).Value = "<< See Work Log >>"										'Resolution Descript.
+		If ARForm.GetFieldByID(536871026).Value = "" Then
+			ARForm.GetFieldByID(536871026).Value = "CommDesk has been contacted for a 911 clearance."		'Work Log
+		End If
+		
+		Call AssignDSTTDefaultCustomer()
+	End Sub
+	
+	Sub DSTTNewBlank()
+		Set ARForm = ArApp.OpenForm(0, "uttrem", "DS-Trouble Ticket", 1, 1)
+	End Sub
+	
+	Sub DSTBNewBlank()
+		Set ARForm = ArApp.OpenForm(0, "uttrem", "DSTB-Ticket", 1, 1)
+	End Sub
+	
+	Sub UTTNewBlank()
+		Set ARForm = ArApp.OpenForm(0, "uttrem", "NM-NOC Ticket", 1, 1)
+	End Sub
+	
+	Sub UTTSearch()	'Search for a particular ticket using UTT number
+		UTTNum = Trim(InputBox("UTT Lookup:","UTT Ticket Number"))
+		If UTTNum = "" Then Exit Sub
+		
+		Call RunQuery("NM-NOC Ticket", "'1' LIKE " & chr(34) & "%" & UTTNum & chr(34))
+	End Sub
+	
+	Sub UTTNodeHubTrunkSearch()	'Search for a particular ticket using Node Hub or Trunk
+		nht = UCase(Trim(InputBox("Enter Node/Hub/Trunk:","Open UTT Node Lookup")))
+		If nht = "" Then Exit Sub
+		
+		If IsNumeric(Mid(nht,3,1)) = True Then	'If the 1 charater in position 3 is numberic, then maybe theres as issue with the node or trunk entry
+			MsgBox "The entry seems invalid, please check and try again",48,"Invalid Node,Hub, or Trunk"
+			Exit Sub
+		End If
+		
+		Call RunQuery("NM-NOC Ticket", "'Status' != " & chr(34) & "Closed" & chr(34) & " AND (('Network Segment' LIKE " & chr(34) & "" & nht & "%" & chr(34) & ") OR ('Device Name/Designation' LIKE " & chr(34) & "" & nht & "%" & chr(34) & "))")
+	End Sub
+	
+	Sub DSTTSearch()	'Search for a particular ticket using DSTT number
+		DSTTNum = Trim(InputBox("DSTT Lookup:","DSTT Ticket Number"))
+		If DSTTNum = "" Then Exit Sub
+		
+		Call RunQuery("DS-Trouble Ticket", "'1' LIKE " & chr(34) & "%" & DSTTNum & chr(34))
+	End Sub
+	
+	Sub DSTBSearch()	'Search for a particular ticket using DSTB number
+		DSTBNum = Trim(InputBox("DSTB Lookup:","DSTB Ticket Number"))
+		If DSTBNum = "" Then Exit Sub
+		
+		Call RunQuery("DSTB-Ticket", "'1' LIKE " & chr(34) & "%" & DSTBNum & chr(34))   		
+	End Sub
+	
+	Sub DSTBVodPpvIssue()
+		If SchemaValidation("DSTB") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		ARForm.GetFieldByID(536870945).Value = "Is there an error code? " & vbNewLine & "If so, when does the error present itself? " & vbNewLine & "Affected boxes: " & vbNewLine & "Does this happen on all titles? " & vbNewLine & "Affected title(s): " & vbNewLine & "Do Free VODs/Movie previews work? " & vbNewLine & "Do ETV(600 series) channels work? "
+		Call DSTBToVod()
+	End Sub
+	
+	Sub DSTBDvrPlusIssue()
+		If SchemaValidation("DSTB") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		ARForm.GetFieldByID(536870945).Value = "Is there an error code? " & vbNewLine & "If so, when does the error present itself? " & vbNewLine & "When did the issue begin? (i.e. Since DVR Plus was added, last week, etc.): " & vbNewLine & "Affected boxes: " & vbNewLine & "Does this happen on all titles? " & vbNewLine & "Affected title(s) including channel, date and time of show: " & vbNewLine & "Can customer pause and playback without an issue? " & vbNewLine & "Do Free VODs/Movie previews work? " & vbNewLine & "Do ETV(600 series) channels work? " & vbNewLine & "Please note if customer agreed to have all recordings deleted for troubleshooting purposes: "
+		Call DSTBToVod()
+	End Sub
+	
+	Sub DSTBSwitchVideo()
+		If SchemaValidation("DSTB") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		ARForm.GetFieldByID(536870945).Value = "What channel(s) are affected? " & vbNewLine & "Is there an error message? " & vbNewLine & "Please include the switch video service group (Control F “sv service group”): " & vbNewLine & "SA Box: " & vbNewLine & "While the customer is tuned to the channel, please include pages 4 & 5 in the worklog." & vbNewLine & "OMS Box: " & vbNewLine & "While the customer is tuned to the channel, please include page 1 in the worklog."
+	End Sub
+	
+	Sub DSTBGuideIssues()
+		If SchemaValidation("DSTB") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		ARForm.GetFieldByID(536870945).Value = "What is the issue? " & vbNewLine & "Is there an error message? " & vbNewLine & "Affected boxes: " & vbNewLine & "If this is channel/program specific, please include channel, title and time of issue: "
+		Call DSTBToVod()
+	End Sub
+	
+	Sub DSTBChannelProb()
+		If SchemaValidation("DSTB") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		ARForm.GetFieldByID(536870945).Value = "Clear and specific description of the issue: " & vbNewLine & "Please include channel number: " & vbNewLine & "Affected boxes: " & vbNewLine & "Please include poll results while on channel: " & vbNewLine & "SA Box: " & vbNewLine & "Pages 1, 4, 5 and 23 (8300s only)" & vbNewLine & "OMS: " & vbNewLine & "Page 1 "  & chr(34) & "Inband Quality-1 (Power,SNR)"  & chr(34) & ""
+		Call DSTBToVod()
+	End Sub
+		
+	Sub DSTBToVod()
+		If SchemaValidation("DSTB") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+
+		ARForm.GetFieldByID(536870915).Value = "VOD Digital Services"	'Assign-to Group
+		ARForm.GetFieldByID(7).Value = "Follow Up"						'Status
+		ARForm.GetFieldByID(4).Value = "VOD Digital Services"			'Assign-to
+	End Sub
+	
+	Sub DSTBToQcNyc()
+		If SchemaValidation("DSTB") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870915).Value = "QC New York City"	'Assign-to Group
+		ARForm.GetFieldByID(7).Value = "Follow Up"					'Status
+	End Sub
+	
+	Sub DSTBToEscTeam()
+		If SchemaValidation("DSTB") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870915).Value = "Technical Escalation Team"	'Assign-to Group
+		ARForm.GetFieldByID(7).Value = "Follow Up"							'Status
+	End Sub
+	
+	Sub DSTTUndelId()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870916).Value = "BOOST Tool"				'Issue Code
+		ARForm.GetFieldByID(536871032).Value = "Unable to Undelete"		'Cause Code
+		ARForm.GetFieldByID(536871041).Value = ""						'Resolution Code-1
+		ARForm.GetFieldByID(536870912).Value = ""						'Resolution Code-2
+		ARForm.GetFieldByID(8).Value = "Unable to Undelete ID"			'Issue Description
+		ARForm.GetFieldByID(536870954).Value = "<< See Work Log >>"		'Cause Description
+		ARForm.GetFieldByID(536870955).Value = "<< See Work Log >>"		'Resolution Description
+		ARForm.GetFieldByID(536871026).Value = "Issue:  Undelete ID" & vbNewLine & "" & vbNewLine & "Provide the following for each affected Optimum ID:" & vbNewLine & "" & vbNewLine & "    Modem MAC: " & vbNewLine & "    Username: " & vbNewLine & "    Does the Customer have OOL rate codes?: " & vbNewLine & "    If there are no OOL rate codes, is this an OAC Account?: "	'Work Log
+	End Sub
+	
+	Sub DSTTUndelId()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870916).Value = "BOOST Tool"				'Issue Code
+		ARForm.GetFieldByID(536871032).Value = "Unable to Undelete"		'Cause Code
+		ARForm.GetFieldByID(536871041).Value = ""						'Resolution Code-1
+		ARForm.GetFieldByID(536870912).Value = ""						'Resolution Code-2
+		ARForm.GetFieldByID(8).Value = "Unable to Undelete ID"			'Issue Description
+		ARForm.GetFieldByID(536870954).Value = "<< See Work Log >>"		'Cause Description
+		ARForm.GetFieldByID(536870955).Value = "<< See Work Log >>"		'Resolution Description
+		ARForm.GetFieldByID(536871026).Value = "Issue:  Undelete ID" & vbNewLine & "" & vbNewLine & "Provide the following for each affected Optimum ID:" & vbNewLine & "" & vbNewLine & "    Modem MAC: " & vbNewLine & "    Username: " & vbNewLine & "    Does the Customer have OOL rate codes?: " & vbNewLine & "    If there are no OOL rate codes, is this an OAC Account?: "		'Work Log
+		
+		Call DSTTFlipToBISC()
+	End Sub
+	
+	Sub DSTTMissingEmail()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870916).Value = "Webmail"				'Issue Code
+		ARForm.GetFieldByID(536871032).Value = "Missing Emails"			'Cause Code
+		ARForm.GetFieldByID(536871041).Value = ""						'Resolution Code-1
+		ARForm.GetFieldByID(536870912).Value = ""						'Resolution Code-2
+		ARForm.GetFieldByID(8).Value = "Missing Emails"					'Issue Description
+		ARForm.GetFieldByID(536870954).Value = "<< See Work Log >>"		'Cause Description
+		ARForm.GetFieldByID(536870955).Value = "<< See Work Log >>"		'Resolution Description
+		ARForm.GetFieldByID(536871026).Value = "Issue:  Missing Emails" & vbNewLine & "" & vbNewLine & "    Modem MAC: " & vbNewLine & "    Username: " & vbNewLine & "    Does the user have a local POP3 email client?: " & vbNewLine & "    Emails are missing prior to what date/time?: "		'Work Log
+		
+		Call DSTTFlipToBISC()
+	End Sub
+	
+	Sub DSTTUnableMT()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870916).Value = "BOOST Tool"							'Issue Code
+		ARForm.GetFieldByID(536871032).Value = "Unable to Perform Move Transfer"	'Cause Code
+		ARForm.GetFieldByID(536871041).Value = ""									'Resolution Code-1
+		ARForm.GetFieldByID(536870912).Value = ""									'Resolution Code-2
+		ARForm.GetFieldByID(8).Value = "Unable to Perform Move Transfer"			'Issue Description
+		ARForm.GetFieldByID(536870954).Value = "<< See Work Log >>"					'Cause Description
+		ARForm.GetFieldByID(536870955).Value = "<< See Work Log >>"					'Resolution Description
+		ARForm.GetFieldByID(536871026).Value = "Issue:  Move Transfer" & vbNewLine & "" & vbNewLine & "    Modem MAC: " & vbNewLine & "    Primary Username: " & vbNewLine & "    Additional Username(s) to be moved: " & vbNewLine & "    Is this all the Optimum IDs on the account (Y/N)? " & vbNewLine & "    If NO, please escalate through TSG Leads/Supervisors." & vbNewLine & "    Old Account #: " & vbNewLine & "    New Account #: " & vbNewLine & "    Are the emails backed up via local email client?: " & vbNewLine & "    Are the emails in a deleted state?: "		'Work Log
+		
+		Call DSTTFlipToBISC()
+	End Sub
+	
+	Sub DSTTTrySpamScrub()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870954).Value = "<< See Work Log >>"					'Cause Description
+		ARForm.GetFieldByID(536870955).Value = "<< See Work Log >>"					'Resolution Description
+		ARForm.GetFieldByID(536871026).Value = "Please do a spam scrub test:" & vbNewLine & vbNewLine & "The following are needed in order to investigate a spam scrub delivery issue in a timely fashion for the customer.  If these items are provided within 24hours then issue can be reviewed and resolved faster." & vbNewLine & vbNewLine & "1. Have blocked party send an email to our customer with spam scrub on so the block event takes place. (We need this log event - so please note date/time)" & vbNewLine & vbNewLine & "2. Turn off spam scrub and do the same, this time letting the email through into the Inbox. Make sure the customer does not POP it otherwise this work will need to be repeated. Place it in a newly created folder in webmail so we can pull the specific copy ourselves." & vbNewLine & vbNewLine & "3 .Escalate the issue providing the subject of the email and date/time that this took place along with the folder name where the email was saved in webmail." & vbNewLine & vbNewLine & "Following these 3 steps exactly will allow us to fix these issues quickly for the customer and sending party. Please note that we need the email itself as described above to determine what's triggering the block and sending us just some of the contents or headers is not sufficient."		'Work Log
+	End Sub
+	
+	Sub LaunchTool(toolID)	'Launches links and tools for the user
+		If frmRadio(0).Checked Then			'MS Internet Explorer
+			browserExec = "iexplore.exe"
+		ElseIf frmRadio(1).Checked Then		'Mozilla FireFox
+			browserExec = "firefox.exe"
+		ElseIf frmRadio(2).Checked Then		'Google Chrome
+			browserExec = "chrome.exe"
+		Else
+			MsgBox "Please select a browser from the radios",48
+			Exit Sub
+		End If
+		
+		Select Case toolID
+			Case 1	toolURL = "commdesk"										'CommDesk Gateway
+			Case 2	toolURL = "http://voice.optimum.net/Admin/"					'AST Residential
+			Case 3	toolURL = "http://business.optimum.net/Admin/"				'AST Business
+			Case 4	toolURL = "http://intranet.cablevision.com/fieldcomm/"		'Field Communications
+			Case 5	toolURL = "http://10.244.192.207/"							'E-XMS
+			Case 6	toolURL = "http://tools.bisc.cv.net/"						'BISC Tools
+			Case 7	toolURL = "http://outages.cablevision.com/"					'Outage Board
+			Case 8	toolURL = "http://ngn-cas2"									'NgN Analysis System
+			Case 9	toolURL = "http://staticip-internal.cablevision.com"		'Static IP Administration
+			Case 10	toolURL = "https://10.244.192.137"							'Panorama
+			Case 11	toolURL = "http://boost2.cablevision.com/"					'Boost v3.5
+			Case 12	toolURL = "http://10.5.69.201:8080/spectrum/oneclick.jnlp"	'Spectrum
+			Case 13	toolURL = "http://wordpress.cablevision.com/fieldcomm/"		'Wordpress Field Comm
+			Case Else
+				MsgBox "Button Unassigned",48
+				Exit Sub
+		End Select
+		
+		WshShell.Run(browserExec & " " & toolURL)	'Take the strings from radio button and the tool selected and run the command.
+	End Sub
+	
+	Sub DSTTCallerID()
+		If SchemaValidation("DSTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		ARForm.GetFieldByID(536870916).Value = "Caller ID"							'Issue Code
+		ARForm.GetFieldByID(536871032).Value = "ID Not Displayed"					'Cause Code
+		ARForm.GetFieldByID(536871041).Value = "Replication"						'Resolution Code-1
+		ARForm.GetFieldByID(536870912).Value = ""									'Resolution Code-2
+		ARForm.GetFieldByID(8).Value = "Caller ID Not Displayed"								'Issue Description
+		ARForm.GetFieldByID(536870954).Value = "<< See Work Log >>"					'Cause Description
+		ARForm.GetFieldByID(536870955).Value = "<< See Work Log >>"					'Resolution Description
+		ARForm.GetFieldByID(536871026).Value = "Subscriber is unable to view their Caller ID information via their settop box. After normal troubleshooting, the persists. Boxes have been rebooted. The signal levels on the boxes seem at normal levels. Caller ID Test tool has been used with no resolution as well. Please assist in this if possible." 	'Work Log
+		
+		Call DSTTFlipToBISC()
+	End Sub
+	
+	Sub MACRONodeCallVolSearch()
+		node = Trim(InputBox("Enter Node/Hub/Trunk to query against DSTT & DSTB Tickets:","Enter the Node/Hub/Trunk"))
+		If node = "" Then
+			Exit Sub
+		End If
+		
+		dateTime = Trim(InputBox("Enter Start Date and/or Time:","Start Date/Time"))
+		If dateTime = "" Then
+			MsgBox "Start Date and/or Time is required",48
+			Exit Sub
+		End If
+		
+		Call RunQuery("DS-Trouble Ticket", "'3' >= " & chr(34) & dateTime & chr(34) & " AND '536871053' LIKE " & chr(34) & node & "%" & chr(34))
+		WshShell.Popup "Opening second Query",1,"Loading...",64	'Need this Pause to successfully do next query without the overlapping issue
+		Call RunQuery("DSTB-Ticket", "'3' >= " & chr(34) & dateTime & chr(34) & " AND '536870920' LIKE " & chr(34) & node & "%" & chr(34))
+	End Sub
+	
+	Function NodeReference(node)	'Will return a delimited string with the Region, Area, Local Area Name, and Facility of the give 'node'
+		node = UCase(node)
+		hub = Left(node,2)
+		trunk = Left(node,3)
+		
+		Select Case hub
+			Case "10" tempString = "Long Island,Long Island West,Nassau Woodbury,Hicksville,01"
+			Case "11" tempString = "Long Island,Long Island West,Nassau Woodbury,Roslyn,01"
+			Case "12" tempString = "Long Island,Long Island West,Nassau Woodbury,Freeport,58"
+			Case "13" tempString = "Long Island,Long Island West,Nassau Woodbury,Lynbrook,01"
+			Case "14" tempString = "Long Island,Long Island East,Hauppauge,Huntington,01"
+			Case "15" tempString = "Long Island,Long Island East,Hauppauge,Babylon,01"
+			Case "20" tempString = "CWN,New York City,Bronx,Bronx - Hub A (Seabury),37"
+			Case "21" tempString = "CWN,New York City,Bronx,Bronx - Hub B (Dyre),37"
+			Case "22" tempString = "CWN,New York City,Bronx,Bronx - Hub C&D (Jerome),37"
+			Case "23" tempString = "CWN,New York City,Bronx,Bronx - Hub E (Tiffany),37"
+			Case "30" tempString = "CWN,New York City,Brooklyn,Brooklyn - Hub H (92nd St.),36"
+			Case "31" tempString = "CWN,New York City,Brooklyn,Brooklyn - Hub I (18th St.),36"
+			Case "32" tempString = "CWN,New York City,Brooklyn,Brooklyn - Hub J (46th St.),36"
+			Case "33" tempString = "CWN,New York City,Brooklyn,Brooklyn - Hub K (60th St.),36"
+			Case "34" tempString = "CWN,New York City,Brooklyn,Brooklyn - Hub L (Fulton),36"
+			Case "35" tempString = "CWN,New York City,Brooklyn,Brooklyn - Hub M (St. Marks),36"
+			Case "40" tempString = "CWN,Westchester,Southern Westchester,White Plains (Greenburgh),69"
+			Case "41" tempString = "CWN,Westchester,Southern Westchester,Mamaroneck,01"
+			Case "42" tempString = "CWN,Westchester,Yorktown,Katonah,01"
+			Case "43" tempString = "CWN,Westchester,Ossining,Ossining,82"
+			Case "44" tempString = "CWN,Westchester,Yonkers,Yonkers,03"
+			Case "45" tempString = "CWN,Westchester,Wappingers Falls,Wappingers Falls,83"
+			Case "46" tempString = "CWN,Westchester,Wappingers Falls,Highlands,83"
+			Case "47" tempString = "CWN,Westchester,Wappingers Falls,Hyde Park,01"
+			Case "48" tempString = "CWN,Westchester,Dutchess,Dover Plains,17"
+			Case "50" tempString = "CWN,Connecticut,Norwalk,Norwalk,08"
+			Case "51" tempString = "CWN,Connecticut,Norwalk,Stamford,08"
+			Case "52" tempString = "CWN,Connecticut,Bridgeport,Fairfield,01"
+			Case "53" tempString = "CWN,Connecticut,Bridgeport,Bridgeport,06"
+			Case "54" tempString = "CWN,Connecticut,Bridgeport,Milford,06"
+			Case "55" tempString = "CWN,Connecticut,Litchfield,Litchfield,81"
+			Case "60" tempString = "New Jersey,New Jersey North,Oakland,Oakland,70"
+			Case "61" tempString = "New Jersey,New Jersey North,Oakland,Clifton,70"
+			Case "62" tempString = "New Jersey,New Jersey North,Oakland,Hackensack,70"
+			Case "63" tempString = "New Jersey,New Jersey North,Oakland,Ramsey,01"
+			Case "64" tempString = "New Jersey,New Jersey North,Paterson/Allamuchy,Paterson,72"
+			Case "65" tempString = "New Jersey,New Jersey North,Warwick,Warwick,01"
+			Case "66" tempString = "New Jersey,New Jersey North,Warwick,West Milford,77"
+			Case "67" tempString = "New Jersey,New Jersey North,Rockland/Ramapo,Mahwah,73"
+			Case "68" tempString = "New Jersey,New Jersey North,Matamoras,Matamoras,77"
+			Case "69" tempString = "New Jersey,New Jersey North,Rockland/Ramapo,Nanuet,01"
+			Case "70" tempString = "New Jersey,New Jersey North,Rockland/Ramapo,Tuxedo,73"
+			Case "71" tempString = "New Jersey,New Jersey North,Mid-New Jersey,Bergen,01"
+			Case "72" tempString = "New Jersey,New Jersey North,Mid-New Jersey,North Bergen (Hudson System),01"
+			Case "73" tempString = "New Jersey,New Jersey North,Mid-New Jersey,Newark,44"
+			Case "74" tempString = "New Jersey,New Jersey North,Mid-New Jersey,Elizabeth,44"
+			Case "75" tempString = "New Jersey,New Jersey North,Mid-New Jersey,Bayonne,04"
+			Case "80" tempString = "New Jersey,New Jersey South,Morris,Parsippany,76"
+			Case "81" tempString = "New Jersey,New Jersey South,Morris,Randolph,76"
+			Case "82" tempString = "New Jersey,New Jersey South,Raritan Valley,Piscataway,75"
+			Case "83" tempString = "New Jersey,New Jersey South,Raritan Valley,Warren,75"
+			Case "84" tempString = "New Jersey,New Jersey South,Raritan Valley,Sayerville,75"
+			Case "85" tempString = "New Jersey,New Jersey South,Monmouth,Jackson,65"
+			Case "86" tempString = "New Jersey,New Jersey South,Monmouth,Wall,66"
+			Case "87" tempString = "New Jersey,New Jersey South,Monmouth,Freehold,64"
+			Case "88" tempString = "New Jersey,New Jersey South,Monmouth,Brick/Seaside,67"
+			Case "89" tempString = "New Jersey,New Jersey South,Hamilton,Hamilton,74"
+			Case "X1" tempString = "Long Island,Long Island East,Hauppauge,St. James Hauppauge,01"
+			Case "X2" tempString = "Long Island,Long Island East,Hauppauge,Coram,01"
+			Case "X3" tempString = "Long Island,Long Island East,Hauppauge,Central Islip Hauppauge,01"
+			Case "X4" tempString = "Long Island,Long Island East,Brookhaven,Center Moriches,68"
+			Case "X5" tempString = "Long Island,Long Island East,East End,Southampton,39"
+			Case "X6" tempString = "Long Island,Long Island East,East End,East Hampton,16"
+			Case "X7" tempString = "Long Island,Long Island East,East End,East Quogue,39"
+			Case "X8" tempString = "Long Island,Long Island East,East End,Riverhead,39"
+			Case "X9" tempString = "Long Island,Long Island East,East End,Southold,39"
+			Case Else
+				NodeReference = "NO_MATCH"	'If first two aren't found then just stop looking
+				Exit Function
+		End Select
+		
+		Select Case trunk
+			Case "10A" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "10B" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "10C" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "10D" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "10E" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "10F" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "10G" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "10H" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "10I" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "10J" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "10K" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "10L" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "10M" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "10N" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "10O" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "10P" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "10Q" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "10R" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "10S" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "10Z" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "11A" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "11B" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "11C" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "11D" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "11E" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "11F" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "11G" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "11H" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "11I" tempString = Replace(tempString,Right(tempString,2),"01")
+			Case "11J" tempString = Replace(tempString,Right(tempString,2),"48")
+			Case "11K" tempString = Replace(tempString,Right(tempString,2),"48")
+			Case "13H" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "13I" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "13J" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "13K" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "13L" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "13M" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "13N" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "13O" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "13P" tempString = Replace(tempString,Right(tempString,2),"58")
+			Case "13Q" tempString = Replace(tempString,Right(tempString,2),"28")
+			Case "13R" tempString = Replace(tempString,Right(tempString,2),"28")
+			Case "41A" tempString = Replace(tempString,Right(tempString,2),"03")
+			Case "41B" tempString = Replace(tempString,Right(tempString,2),"03")
+			Case "41C" tempString = Replace(tempString,Right(tempString,2),"69")
+			Case "41D" tempString = Replace(tempString,Right(tempString,2),"69")
+			Case "41E" tempString = Replace(tempString,Right(tempString,2),"69")
+			Case "41F" tempString = Replace(tempString,Right(tempString,2),"69")
+			Case "41G" tempString = Replace(tempString,Right(tempString,2),"69")
+			Case "41H" tempString = Replace(tempString,Right(tempString,2),"69")
+			Case "41I" tempString = Replace(tempString,Right(tempString,2),"69")
+			Case "42A" tempString = Replace(tempString,Right(tempString,2),"03")
+			Case "42B" tempString = Replace(tempString,Right(tempString,2),"03")
+			Case "42C" tempString = Replace(tempString,Right(tempString,2),"03")
+			Case "42D" tempString = Replace(tempString,Right(tempString,2),"19")
+			Case "47A" tempString = Replace(tempString,Right(tempString,2),"83")
+			Case "47B" tempString = Replace(tempString,Right(tempString,2),"83")
+			Case "47M" tempString = Replace(tempString,Right(tempString,2),"17")
+			Case "52A" tempString = Replace(tempString,Right(tempString,2),"08")
+			Case "52B" tempString = Replace(tempString,Right(tempString,2),"06")
+			Case "52C" tempString = Replace(tempString,Right(tempString,2),"08")
+			Case "52D" tempString = Replace(tempString,Right(tempString,2),"06")
+			Case "52E" tempString = Replace(tempString,Right(tempString,2),"06")
+			Case "52F" tempString = Replace(tempString,Right(tempString,2),"06")
+			Case "63A" tempString = Replace(tempString,Right(tempString,2),"70")
+			Case "63B" tempString = Replace(tempString,Right(tempString,2),"70")
+			Case "63C" tempString = Replace(tempString,Right(tempString,2),"70")
+			Case "63D"
+				tempString = Replace(tempString,Right(tempString,2),"73")
+				tempString = Replace(tempString,"Oakland","Rockland/Ramapo")
+				tempString = Replace(tempString,"Ramsey","Mahwah")
+			Case "65A" tempString = Replace(tempString,Right(tempString,2),"83")
+			Case "65B" tempString = Replace(tempString,Right(tempString,2),"77")
+			Case "65C" tempString = Replace(tempString,Right(tempString,2),"77")
+			Case "65D" tempString = Replace(tempString,Right(tempString,2),"77")
+			Case "65E" tempString = Replace(tempString,Right(tempString,2),"77")
+			Case "65F" tempString = Replace(tempString,Right(tempString,2),"77")
+			Case "65G" tempString = Replace(tempString,Right(tempString,2),"77")
+			Case "65H" tempString = Replace(tempString,Right(tempString,2),"77")
+			Case "69A" tempString = Replace(tempString,Right(tempString,2),"73")
+			Case "69B" tempString = Replace(tempString,Right(tempString,2),"73")
+			Case "69C" tempString = Replace(tempString,Right(tempString,2),"73")
+			Case "69D" tempString = Replace(tempString,Right(tempString,2),"73")
+			Case "69E" tempString = Replace(tempString,Right(tempString,2),"73")
+			Case "69F" tempString = Replace(tempString,Right(tempString,2),"82")
+			Case "71A" tempString = Replace(tempString,Right(tempString,2),"02")
+			Case "71B" tempString = Replace(tempString,Right(tempString,2),"02")
+			Case "71C" tempString = Replace(tempString,Right(tempString,2),"02")
+			Case "71D" tempString = Replace(tempString,Right(tempString,2),"02")
+			Case "71E" tempString = Replace(tempString,Right(tempString,2),"02")
+			Case "71F" tempString = Replace(tempString,Right(tempString,2),"02")
+			Case "71G" tempString = Replace(tempString,Right(tempString,2),"02")
+			Case "71H" tempString = Replace(tempString,Right(tempString,2),"02")
+			Case "72A" tempString = Replace(tempString,Right(tempString,2),"62")
+			Case "72B" tempString = Replace(tempString,Right(tempString,2),"62")
+			Case "72C" tempString = Replace(tempString,Right(tempString,2),"62")
+			Case "72D" tempString = Replace(tempString,Right(tempString,2),"62")
+			Case "72E" tempString = Replace(tempString,Right(tempString,2),"62")
+			Case "72F" tempString = Replace(tempString,Right(tempString,2),"62")
+			Case "72G" tempString = Replace(tempString,Right(tempString,2),"62")
+			Case "72H" tempString = Replace(tempString,Right(tempString,2),"62")
+			Case "72I" tempString = Replace(tempString,Right(tempString,2),"62")
+			Case "72J"
+				tempString = Replace(tempString,Right(tempString,2),"04")
+				tempString = Replace(tempString,"North Bergen (Hudson System)","Bayonne")
+			Case "X1A" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X1B" tempString = Replace(tempString,Right(tempString,2),"68")
+			Case "X1C" tempString = Replace(tempString,Right(tempString,2),"68")
+			Case "X1D" tempString = Replace(tempString,Right(tempString,2),"68")
+			Case "X1E" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X1F" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X1G" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X1H" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X1I" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X2A" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X2B" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X2C" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X2D" tempString = Replace(tempString,Right(tempString,2),"68")
+			Case "X2E" tempString = Replace(tempString,Right(tempString,2),"68")
+			Case "X2F" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X2G" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X2H" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X2I" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X3A" tempString = Replace(tempString,Right(tempString,2),"18")
+			Case "X3B" tempString = Replace(tempString,Right(tempString,2),"18")
+			Case "X3C" tempString = Replace(tempString,Right(tempString,2),"18")
+			Case "X3D" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X3E" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X3F" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X3G" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X3H" tempString = Replace(tempString,Right(tempString,2),"40")
+			Case "X3I" tempString = Replace(tempString,Right(tempString,2),"40")
+		End Select
+		
+		Select Case node
+			Case "10C006" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C008" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C010" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C011" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C012" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C013" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C014" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C015" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C016" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C017" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C018" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C019" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C020" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C021" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C022" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C023" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C101" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C102" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C103" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C104" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C107" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C125" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C201" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C202" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C203" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C204" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C207" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C225" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C301" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10C401" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D001" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D002" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D003" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D004" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D005" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D006" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D007" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D008" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D009" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D010" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D011" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D012" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D013" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D014" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D015" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D016" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D017" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D018" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D019" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D020" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D021" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D022" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D023" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D024" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D025" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10D126" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E008" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E009" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E010" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E011" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E012" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E014" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E015" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E016" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E017" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E018" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E019" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E020" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E021" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E022" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E023" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E024" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E025" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E026" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E027" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E028" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E029" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E030" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E031" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E032" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E034" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E035" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E036" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E113" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E213" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E313" tempString = Replace(tempString,"Long Island West","Long Island East")
+			Case "10E413" tempString = Replace(tempString,"Long Island West","Long Island East")
+		End Select
+		
+		NodeReference = tempString	'Send back the compiled string with the delimited node information
+	End Function
+	
+	Sub FilpAreaImpactedFields(nodeAreaImpactedStr)	'Uses node lookup string to flip the Area Impacted section of a UTT
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		tempArr = Split(nodeAreaImpactedStr,",")
+		
+		ARForm.GetFieldByID(536871037).Value = "Optimum East"	'Territory
+		ARForm.GetFieldByID(536870956).Value = tempArr(0)		'Region
+		ARForm.GetFieldByID(536870955).Value = tempArr(1)		'Area
+		ARForm.GetFieldByID(536870958).Value = tempArr(2)		'Local Area Name
+		ARForm.GetFieldByID(536871142).Value = tempArr(3)		'Facility
+	End Sub
+	
+	Sub UTTTwoUBRsOneModem()
+		Do Until Len(node) >= 3 And Len(node) <= 6	'We're checking to make sure a Trunk is entered or a whole node id
+			node = Trim(InputBox("Please enter the customer's Node/Trunk","Enter Node/Trunk"))
+			If node = "" Then Exit Sub
+			
+			areaImpStr = NodeReference(node)
+			
+			If areaImpStr = "NO_MATCH" Then
+				MsgBox "Node entered is either invalid or unknown",16
+				Exit Sub
+			End If
+			
+			If Len(node) < 3 Or Len(node) > 6 Then MsgBox "Please Enter a valid Node or Hub",64
+		Loop
+		
+		Call UTTNewBlank()
+		Set ARForm = ArApp.GetActiveForm()
+		Call FilpAreaImpactedFields(areaImpStr)
+		
+		ARForm.GetFieldByID(536870915).Value = "On" 														'OOL Radio Button
+		ARForm.GetFieldByID(536871158).Value = "0"															'OOL Sub's Affected
+		ARForm.GetFieldByID(536871062).Value = "1"															'Call Volume
+		ARForm.GetFieldByID(536870947).Value = "Customer/Tech unable to register/provision."				'Issue
+		ARForm.GetFieldByID(536871066).Value = "Modem Polling on 2 uBR's"									'Issue Usage
+		ARForm.GetFieldByID(536870938).Value = "Modem Polling on 2 uBR's"									'Issue Detail / Symp
+		ARForm.GetFieldByID(536870988).Value = UCase(node)													'Network Segment
+		ARForm.GetFieldByID(536871205).Value = "None" 														'Outage/Impairment
+		ARForm.GetFieldByID(536870937).Value = "NYMA - NOC"													'Assigned-to Group
+		ARForm.GetFieldByID(536871029).Value = "No"															'Issue Require RCA?				
+		ARForm.GetFieldByID(536870943).Value = "Customer Equipment" 										'Type under Device/Equipment Affected
+		ARForm.GetFieldByID(536870939).Value = DateAdd("n",15,CDate(ARForm.GetFieldByID(536871079).Value))	'Est Arrival Time
+		ARForm.GetFieldByID(536870913).Value = DateAdd("h",2,CDate(ARForm.GetFieldByID(536871079).Value))	'Est Repair Time
+		ARForm.GetFieldByID(536870977).Value = "15"															'EstArrivalMinutes
+		ARForm.GetFieldByID(536871078).Value = "2"															'EstRepairHours
+		
+		modem = Trim(UCase(InputBox("Enter the MAC Address of the Modem with the two UBRs:","Modem MAC")))
+		ubr = Trim(InputBox("Enter the UBR where the modem is polling offline:","Enter UBR"))
+		
+		On Error Resume Next	'Just throw out any errors for now (In case remedy form has been closed)
+		ARForm.GetFieldByID(536870942).Value = "The Modem with Mac address " & modem & " looks to be registered in 2 uBRs. Based on information from our polling page, this modem should be removed from the uBR " & ubr & "." & vbNewLine & vbNewLine & "Mac:  " & modem & vbNewLine & "Ubr:  " & ubr & vbNewLine & vbNewLine & "Thanks," & vbNewLine & "Comm Desk"
+	End Sub
+	
+	Sub UTTEmailDispatch()
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		If Left(ARForm.GetFieldByID(536870947).Value, 4) <> "WIFI" Then
+			If ARForm.GetFieldByID(1).Value = "" Or ARForm.GetFieldByID(1).Value = "UTT" Then
+				MsgBox "'NOC Ticket #' field should not be blank",48
+				Exit Sub
+			End If
+			
+			UTT = Right(ARForm.GetFieldByID(1).Value, 6)
+			Node = ARForm.GetFieldByID(536870988).Value
+			Issue = ARForm.GetFieldByID(536870947).Value
+			IssueDetail = ARForm.GetFieldByID(536870938).Value
+			Memo = ARForm.GetFieldByID(536871135).Value
+			
+			Set objWord = CreateObject("Word.Application")
+			Set objDoc = objWord.Documents.Open("http://10.5.69.131/cgi-bin/CriticalAdvisory/rtfwriter.cgi?utt=" & UTT)
+			objWord.Visible = False
+			Set txtrange = objDoc.Range(objDoc.Paragraphs(1).Range.Start, objDoc.Paragraphs(objDoc.Paragraphs.Count).Range.End)
+			UTTAddresses = txtrange
+			
+			SubjectField = " UTT " & UTT & " " & Issue & " - " & IssueDetail
+			BodyField = "Hello,<br><br>Can you please investigate " & Issue & " UTT " & UTT & "<br>Node: " & Node & "<br>Memo: " & Memo
+			
+			Set objOutlook = CreateObject("Outlook.Application")
+			Set objMailItem = objOutlook.CreateItem(0)
+			Set objNameSpace = objOutlook.GetNameSpace("MAPI")
+			
+			On Error Resume Next
+			With objMailItem
+				.Display
+				.Subject = SubjectField
+				.HTMLBody = BodyField & UTTAddresses
+			End With
+			On Error GoTo 0
+			
+			Set objMailItem = Nothing
+			Set objOutlook = Nothing
+			
+			objWord.Quit
+		ElseIf Left(ARForm.GetFieldByID(536870947).Value, 4) = "WIFI" Then
+			equipmentID = ARForm.GetField("Equipment ID").Value
+			If equipmentID = "" Then
+				Call DevNmeDesgSendKeyENTER()
+			End If
+			
+			UTT = Right(ARForm.GetFieldByID(536870988).Value, 6)
+			UTTDeviceName = ARForm.GetFieldByID(536870967).Value
+			
+			sSqlSelect = "SELECT ""Device Name / Designation"", ""DOCSIS MAC"", ""CD Acct#"", ""Street"", ""Pole"", ""City"" from ""NM:Equipment DB"" WHERE ""Equipment ID"" = '" & equipmentID & "'"
+			Set adoConnect = CreateObject("ADODB.connection")
+			adoConnect.Open ("DRIVER={AR System ODBC Driver};ARServer=uttrem;UID=crownd;PWD=crownd;")
+			If Err.Number <> 0 Then
+				Debug.Print "errnumber not zero"
+			End If
+			
+			Set adoRecordSet = adoConnect.Execute(sSqlSelect)
+			
+			dbDeviceName = adoRecordSet("Device Name / Designation")
+			dbDocsisMAC = adoRecordSet("DOCSIS MAC")
+			dbCDAcct = adoRecordSet("CD Acct#")
+			dbStreet = adoRecordSet("Street")
+			dbPole = adoRecordSet("Pole")
+			dbCity = adoRecordSet("City")
+			
+			sSqlSelect = ""
+			Set adoRecordSet = Nothing
+			Set adoConnect = Nothing
+			
+			If UTTDeviceName <> dbDeviceName Then
+				MsgBox "Device name on UTT does not match Equipment DB entry", vbCritical
+				Exit Sub
+			End If
+			
+			subj = "WiFi UTT " & UTT & " - " & dbDeviceName
+			msg = "WiFi UTT: " & UTT & vbCrLf & "Device: " & dbDeviceName & vbCrLf & "Mac: " & dbDocsisMAC & vbCrLf & "Account: " & dbCDAcct & vbCrLf & "Location: " & dbStreet & vbCrLf & "Pole: " & dbPole & vbCrLf & "City: " & dbCity
+        
+			Set objOutlook = CreateObject("Outlook.Application")
+			Set objMailItem = objOutlook.CreateItem(0)
+			Set objNameSpace = objOutlook.GetNameSpace("MAPI")
+			
+			On Error Resume Next
+			With objMailItem
+				.Display
+				.Subject = subj
+				.Body = msg
+			End With
+			On Error GoTo 0
+			
+			Set objMailItem = Nothing
+			Set objOutlook = Nothing
+		End If
+	End Sub
+	
+	Sub UTTPollWiFi()
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+		
+		If Left(ARForm.GetFieldByID(536870947).Value, 4) = "WIFI" Then
+			For i=1 To 3
+				If Len(ARForm.GetField("Equipment ID").Value) < 10 Then	'I'm assuming 10 would be ideal character count for a valid Eq. ID
+					Call DevNmeDesgSendKeyENTER()
+				ElseIf Len(ARForm.GetField("Equipment ID").Value) > 10 Then
+					Exit For
+				End If
+			Next
+			
+			If Len(ARForm.GetField("Equipment ID").Value) < 10 Then 
+				MsgBox "Something is wrong with the Wifi Equipment ID field. Check the Equipment Detail section and see if there's a valid Equipment ID.",48
+				Exit Sub
+			End If
+			
+			equipmentID = ARForm.GetField("Equipment ID").Value
+			
+			sSqlSelect = "SELECT ""DOCSIS MAC"" from ""NM:Equipment DB"" WHERE ""Equipment ID"" = '" & equipmentID & "'"
+			Set adoConnect = CreateObject("ADODB.connection")
+			adoConnect.Open ("DRIVER={AR System ODBC Driver};ARServer=uttrem;UID=crownd;PWD=crownd;")
+			If Err.Number <> 0 Then
+				Debug.Print "errnumber not zero"
+			End If
+			
+			Set adoRecordSet = adoConnect.Execute(sSqlSelect)
+			
+			dbDocsisMAC = adoRecordSet("DOCSIS MAC")
+			
+			sSqlSelect = ""
+			Set adoRecordSet = Nothing
+			Set adoConnect = Nothing
+			
+			If frmRadio(0).Checked Then			'MS Internet Explorer
+				browserExec = "iexplore.exe"
+			ElseIf frmRadio(1).Checked Then		'Mozilla FireFox
+				browserExec = "firefox.exe"
+			ElseIf frmRadio(2).Checked Then		'Google Chrome
+				browserExec = "chrome.exe"
+			Else
+				MsgBox "Please select a browser from the radios to use the Modem-Poller with",48
+				Exit Sub
+			End If
+			
+			WshShell.Run(browserExec & " http://tools.bisc.cv.net/cgi-bin/bounceping6.tcl?modem=" & dbDocsisMAC)
+		Else
+			MsgBox "Please use with a WiFi ticket"
+		End If
+	End Sub
+	
+	Sub About()
+		MsgBox "Communications Desk Dashboard v1.0" & vbNewLine & _
+				"Remedy Action Request System Companion Tool" & vbNewLine & _
+				"Copyright (C) 2013  Jerryvan Rosado" & vbNewLine & _
+				"" & vbNewLine & _
+				"This program is free software: you can redistribute it and/or modify" & vbNewLine & _
+				"it under the terms of the GNU General Public License as published by" & vbNewLine & _
+				"the Free Software Foundation, either version 3 of the License, or" & vbNewLine & _
+				"(at your option) any later version." & vbNewLine & _
+				"" & vbNewLine & _
+				"This program is distributed in the hope that it will be useful," & vbNewLine & _
+				"but WITHOUT ANY WARRANTY; without even the implied warranty of" & vbNewLine & _
+				"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the" & vbNewLine & _
+				"GNU General Public License for more details." & vbNewLine & _
+				"" & vbNewLine & _
+				"You should have received a copy of the GNU General Public License" & vbNewLine & _
+				"along with this program.  If not, see <http://www.gnu.org/licenses/>."
+	End Sub
+
+	Sub UTTInjectNetSeg()
+		If SchemaValidation("UTT") = False Then Exit Sub
+		Set ARForm = ArApp.GetActiveForm()
+
+		MsgBox "Network Segment = " & ARForm.GetFieldByID(536870988).Value
+
+		node = Trim(InputBox("Enter a Node to Inject to the UTT's hidden Network Segment field:","Enter the Node"))
+		If node = "" Then Exit Sub
+
+		ARForm.GetFieldByID(536870988).Value = node
+	End Sub
+</SCRIPT>
+<BODY bgcolor="#C6DFC6" onload="About()">
+	<table width="100%">
+		<tr>
+	    	<td>
+	    		<h1>NYMA-NOC Tickets</h1>
+	    		<input type="button" value="Create New UTT" onclick="UTTNewBlank" Title="Creates a new blank UTT"><br>
+	    		<input type="button" value="Search UTT#" onclick="UTTSearch" Title="Searches for a specific UTT number"><br>
+	    		<input type="button" value="Find UTT by Node" onclick="UTTNodeHubTrunkSearch" Title="Searches for a specific UTT number"><br>
+	    		<br>
+	    		<input type="button" value="Assign UTT to OSP" onclick="UTTDispatchOSP" Title="Flips the designated fields to OSP according to their respective area"><br>
+	    		<input type="button" value="Email to Dispatch" onclick="UTTEmailDispatch" Title="Prepares a regular or WiFi dispatch email in Outlook"><br>
+	    		<input type="button" value="Poll Wifi MAC" onclick="UTTPollWiFi" Title="Polls the WiFi UTT's mac address in the polling page"><br>
+	    		<input type="button" value="Ready UTT for Closure" onclick="ReadyUTT2Close" Title="Scans for predertermined closing conditions and assists in assuring fields are complete"><br>
+	    		<br>
+	    		<input type="button" value="Noise Issue" onclick="UTTNoise" Title="Flips fields to indicate resolution as Noise Issue"><br>
+	    		<input type="button" value="Power Related" onclick="UTTPowerRelated" Title="Flips fields to indicate resolution as Power Related"><br>
+	    		<input type="button" value="Equipment Replaced" onclick="UTTEquipReplaced" Title="Flips fields to indicate resolution as Equipment Replaced"><br>
+	    		<input type="button" value="Changed Tap Plate" onclick="UTTTapPlate" Title="Flips fields to indicate resolution as Tap Plate replacement"><br>
+	    		<input type="button" value="NTR / NTF" onclick="UTTNtfNtr" Title="Flips fields to indicate resolution as No Truck Rolled"><br>
+	    		<input type="button" value="OSP Rolled - NTF" onclick="UTTNtfOsp" Title="Flips fields to indicate resolution as No Trouble Found"><br>
+	    		<input type="button" value="Pwr.Supply Swapped" onclick="UTTPsSwap" Title="Flips fields to indicate resolution as Power Supply Swapped"><br>
+	    		<input type="button" value="Maintenance" onclick="UTTMaint" Title="Flips fields to indicate resolution as Maintenace"><br>
+	    		<input type="button" value="WiFi Rebooted" onclick="UTTWifiReset" Title="Flips fields to indicate resolution as WiFi Modem Rebooted"><br>
+	    		<input type="button" value="WiFi Swapped" onclick="UTTWifiSwap" Title="Flips fields to indicate resolution as WiFi Modem Swapped"><br>
+	    		<input type="button" value="Related-To" onclick="UTTRelatedTo" Title="Flips fields to indicate UTT related to another"><br>
+	    		<br>
+	    		<input type="button" value="2 UBRs,1 Modem" onclick="UTTTwoUBRsOneModem" Title="Creates a 'Modem on 2 UBr' ticket"><br>
+	    		<input type="button" value="Node Injection" onclick="UTTInjectNetSeg" Title="Creates a 'Modem on 2 UBr' ticket"><br>
+	    		<br>
+	    	</td>
+	    	<td>
+	    		<h1>DS-Trouble Tickets</h1> 
+	    		<input type="button" value="Create New DSTT" onclick="DSTTNewBlank" Title="Creates a new blank DSTT"><br>
+	    		<input type="button" value="Search DSTT#" onclick="DSTTSearch" Title="Searches for a specific DSTT number"><br>
+	    		<br>
+	    		<input type="button" value="Assign to Jericho" onclick="DSTTFlipToJericho" Title="Assigns the current DS-Trouble Ticket to Jericho for follow-up"><br>
+	    		<input type="button" value="Assign to Shelton" onclick="DSTTFlipToShelton" Title="Assigns the current DS-Trouble Ticket to Shelton for follow-up"><br>
+	    		<input type="button" value="Assign to BISC" onclick="DSTTFlipToBISC" Title="Escalates the current ticket to BISC On-Site OOL"><br>
+	    		<input type="button" value="Assign to eMedia" onclick="DSTTFlipToEMedia" Title="Escalates the current DS-Trouble Ticket to eMedia"><br>
+	    		<input type="button" value="Assign to CommDesk" onclick="DSTTFlipToCommDesk" Title="Escalates the current DS-Trouble Ticket to eMedia"><br>
+	    		<br>
+	    		<input type="button" value="Generic VDO Call" onclick="DSTTGenericVdo" Title="Sets predetermined DSTT field and drop-down assignments"><br>
+	    		<input type="button" value="911 Clearance" onclick="DSTT911Clearance" Title="Sets predetermined DSTT field and drop-down assignments"><br>
+	    		<input type="button" value="Caller ID on TV" onclick="DSTTCallerID" Title="Sets predetermined DSTT field and drop-down assignments"><br>
+	    		<input type="button" value="Undeletable ID" onclick="DSTTUndelId" Title="Sets predetermined DSTT field and drop-down assignments"><br>
+	    		<input type="button" value="Missing Emails" onclick="DSTTMissingEmail" Title="Sets predetermined DSTT field and drop-down assignments"><br>
+	    		<input type="button" value="ID Move/Transfer" onclick="DSTTUnableMT" Title="Sets predetermined DSTT field and drop-down assignments"><br>
+	    		<input type="button" value="Try SpamScrub" onclick="DSTTTrySpamScrub" Title="Sets predetermined DSTT field and drop-down assignments"><br>
+	    		<input type="button" value="Walled Modem" onclick="DSTTModemWalled" Title="Sets predetermined DSTT field and drop-down assignments"><br>
+	    		<input type="button" value="Modem on 2 UBRs" onclick="DSTTTwoUBRsOneModem" Title="Sets predetermined DSTT field and drop-down assignments"><br>
+	    		<br>
+	    		<input type="button" value="iPad - No Audio" onclick="DSTTIpadNoAudio" Title="Response to iDevice App escalated issues"><br>
+	    		<input type="button" value="PC - White Screen" onclick="DSTTPCWhiteScreen" Title="Response to PC App escalated issues"><br>
+	    		<input type="button" value="PC - Net Conn" onclick="DSTTPCNetConn" Title="Response to PC App escalated issues"><br>
+	    		<input type="button" value="PC - Ext. Display" onclick="DSTTPCExtDisplay" Title="Response to PC App escalated issues"><br>
+	    		<input type="button" value="PC - Error: 3222" onclick="DSTTPCError3222" Title="Response to PC App escalated issues"><br>
+	    		<br>
+	    	</td>
+	    	<td>
+	    		<h1>DSTB-Tickets</h1>
+	    		<input type="button" value="Create New DSTB" onclick="DSTBNewBlank" Title="Creates a new blank DSTB"><br>
+	    		<input type="button" value="Search DSTB#" onclick="DSTBSearch" Title="Searches for a specific DSTB number"><br>
+	    		<br>
+	    		<input type="button" value="Assign to VOD" onclick="DSTBToVod" Title="Assigns the current DSTB to VOD"><br>
+	    		<input type="button" value="Assign to QC NYC" onclick="DSTBToQcNyc" Title="Assigns the current DSTB to QC NYC"><br>
+	    		<input type="button" value="Assign to Esc. Team" onclick="DSTBToEscTeam" Title="Assigns the current DSTB to Escalation Team"><br>
+	    		<br>
+	    		<input type="button" value="VOD/PPV Issue" onclick="DSTBVodPpvIssue" Title="Prefill the fields to reflect this issue"><br>
+	    		<input type="button" value="DVR Plus Issues" onclick="DSTBDvrPlusIssue" Title="Prefill the fields to reflect this issue"><br>
+	    		<input type="button" value="Switch Video" onclick="DSTBSwitchVideo" Title="Prefill the fields to reflect this issue"><br>
+	    		<input type="button" value="Guide Issues" onclick="DSTBGuideIssues" Title="Prefill the fields to reflect this issue"><br>
+	    		<input type="button" value="Channel Prob" onclick="DSTBChannelProb" Title="Prefill the fields to reflect this issue"><br>
+	    		<br>
+	    		<h1>Remedy Queries</h1>
+	    		<input type="button" value="OOL/iO" onclick="MACROOOLiO" Title=""><br>
+	    		<input type="button" value="UTT(s) on CommDesk" onclick="MACROOnComm" Title=""><br>
+	    		<input type="button" value="TT/TB Node Query" onclick="MACRONodeCallVolSearch" Title=""><br>
+	    	</td>
+	    	<td>
+	    		<h1>Tools/Links</h1>
+	    		<div>
+		    		<input type="radio" class="radio" value="radio" onclick="" name="frmRadio" title="">IExplorer<br>
+		    		<input type="radio" class="radio" value="radio" onclick="" name="frmRadio" title="">Firefox<br>
+		    		<input type="radio" class="radio" value="radio" onclick="" name="frmRadio" title="">Chrome<br>
+	    		</div>
+	    		<br>
+	    		<input type="button" value="Gateway" onclick="LaunchTool(1)" Title=""><br>
+	    		<input type="button" value="AST Residential" onclick="LaunchTool(2)" Title=""><br>
+	    		<input type="button" value="AST Business" onclick="LaunchTool(3)" Title=""><br>
+	    		<input type="button" value="Field Communications" onclick="LaunchTool(4)" Title=""><br>
+	    		<input type="button" value="Empirix E-XMS" onclick="LaunchTool(5)" Title=""><br>
+	    		<input type="button" value="BISC Tools" onclick="LaunchTool(6)" Title=""><br>
+	    		<input type="button" value="Outage Board" onclick="LaunchTool(7)" Title=""><br>
+	    		<input type="button" value="NgN Analysis System" onclick="LaunchTool(8)" Title=""><br>
+	    		<input type="button" value="Static IP Admin" onclick="LaunchTool(9)" Title=""><br>
+	    		<input type="button" value="Panorama" onclick="LaunchTool(10)" Title=""><br>
+	    		<input type="button" value="Boost v3.5" onclick="LaunchTool(11)" Title=""><br>
+	    		<input type="button" value="Spectrum" onclick="LaunchTool(12)" Title=""><br>
+	    		<input type="button" value="Wordpress FieldComm" onclick="LaunchTool(13)" Title=""><br>
+	    		<br>
+	    		<br>
+	    		<br>
+	    		<br>
+	    		<br>
+	    		<br>
+	    		<br>
+	    		<input type="button" value="About" onclick="About()" Title=""><br>
+	    	</td>
+		</tr>
+	</table>
+</BODY>
+</HTML>
+
+<!--
+	USE EXAMPLE ARForm.GetFieldByID().Value
+	
+		Field				Field ID
+		-------------------	---------
+	UTT:
+		Territory			536871037
+		Region				536870956
+		Area				536870955
+		Local Area Name		536870958
+		Facility			536871142
+		Assigned-to Group	536870937
+		MCO Field			536871067
+		Network Segment		536870988
+		Issue Require RCA?	536871029
+		Region				536870956
+		Area				536870955
+		Cause				536870946
+		Resolution			536870962
+		Cause Det/Diag		536870948
+		Resolution Desc		536870963
+		Actual Arrival Time	536870972
+		Actual Repair Time	536870922
+		Start Date			536871079
+		Est Arrival Time	536870939 <- Directly inserts a time
+		Est Repair Time		536870913 <- Directly inserts a time
+		Est Arrival Time	536870977 <- Enter 15 minutes here
+		Est Repair Time		536871078 <- Enter 2 hours here
+		Actual Arrival Time	536870972
+		Actual Repair Time	536870922
+		Power Sup Status	536871170
+		Outage/Impairment	536871205
+		Territory			536871037
+		Work Log/History	536870942
+		PS Eq Replaced?		536871033
+		Call Volume			536871062
+		Type				536870943
+		Device/Name Desig.	536870967
+		Issue				536870947
+		Home Phone+			536870929
+		Work Log			536870942
+		Create-date			3
+		NOC Ticket#			1
+		Analog Device Count 536871156
+		Analog Radio Button	536870916 <- Should equal "Analog" to activate
+		Alert Type			536871113
+		OOL Prod./Svcs. Rad	536871171     OOL
+		OOL Device Count	536871158     99
+		Issue Usage			536871066     Modem Polling on 2 uBR's
+		Call Volume			536871062     33
+		Tot. Subs			536871023     66
+		Issue				536870947     Customer/Tech unable to register/provision.
+		Dev/Eq Affected		536870943     Telecom - DSL
+		Issue Detail / Symp	536870938     Modem Polling on 2 uBR's DETAIL SYMPTOMS
+		Tech ID				536870960
+		Tech Notify			536870964
+		Weather Conditions	536870961
+		Dispatch Notify		536870978
+		# of Channels Affec 536871197
+		First Call			536871196
+		Sub Prod			536871160
+		OV Device Count		536871159
+		OV Radio			536870918 <- Should equal "OV" to activate
+		Memo				536871135
+		
+	NM:Equipment DB
+		DOCSIS MAC			536870971
+		
+	DSTT:
+		Creation Date		3
+		Issue Description	8
+		Cause Description	536870954
+		Work Log			536871026
+		Issue Code			536870916
+		Cause Code			536871032
+		Res Code 1			536871041
+		Res Code 2			536870912
+		Assigned-to Group	536870963
+		Status				7
+		Call Center			536871019
+		Assigned-To			4
+		Ticket Type			536870941
+		Cause Description	536870954
+		Resolution Descrip.	536870955
+		MAC Address+		536870921
+		Node				536871053
+		IPT/OV#				536871057
+		Customer Type		536871024
+		IP Address			536870999
+		CableData Corp/		536870973
+		Zip					536870945
+		State				536870944
+		City				536870943
+		Account+			536870931
+		Home Phone+			536870929
+		MAC Address+		536870921
+		Address				536870917
+		Last Name			536870914
+		First Name			536870913
+	
+	DSTB:
+		Account+			536870930
+		Address+			536870925
+		Assigned-to			536870970
+		Assigned-to			4
+		Assigned-to Group	536870915
+		Call Center			536870917
+		Cause Code			536870972
+		Cause Code			536870942
+		CblDataCorp/		536870931
+		City				536870926
+		Create-date			3
+		Customer Type		536870969
+		Date Live			536870932
+		Detailed Descript.	536870936
+		DSTB Ticket			1
+		Equipment			536870975
+		Equipment			536870974
+		First Name			536870922
+		Home Phone+			536870924
+		Issue Code			536870971
+		Issue Code			536870916
+		Last Name+			536870923
+		Last-modified by	5
+		Modified-date		6
+		Multiple Issues		536870952
+		Node				536870920
+		Resolution Code		536870973
+		Resolution Code		536870943
+		Short Description	8
+		State				536870927
+		Status				7
+		Submitter			2
+		Work / Log History	536870945
+		Zip					536870928
+		
+		0 = vbOKOnly - OK button only
+		1 = vbOKCancel - OK and Cancel buttons
+		2 = vbAbortRetryIgnore - Abort, Retry, and Ignore buttons
+		3 = vbYesNoCancel - Yes, No, and Cancel buttons
+		4 = vbYesNo - Yes and No buttons
+		5 = vbRetryCancel - Retry and Cancel buttons
+		16 = vbCritical - Critical Message icon
+		32 = vbQuestion - Warning Query icon
+		48 = vbExclamation - Warning Message icon
+		64 = vbInformation - Information Message icon
+		0 = vbDefaultButton1 - First button is default
+		256 = vbDefaultButton2 - Second button is default
+		512 = vbDefaultButton3 - Third button is default
+		768 = vbDefaultButton4 - Fourth button is default
+		0 = vbApplicationModal - Application modal (the current application will not work until the user responds to the message box)
+		4096 = vbSystemModal - System modal (all applications wont work until the user responds to the message box)
+		
+		The 3 Schemas:
+			NM-NOC Ticket
+			DS-Trouble Ticket
+			DSTB-Ticket
+			NM:Equipment DB
+		
+	Code Snippets:
+		MsgBox Replace(result,",","" & vbNewLine & "")
+		
+		node = InputBox("Please enter Node/Trunk/Hub")
+		If node = "" Then Exit Sub
+		
+		MsgBox ("Err.Number: " & Err.Number & vbNewLine & "Err.Description: " & Err.Description)	'Learn the error number and description
+		
+		For the following code, we need to verify the process is accurate apparently
+		genUsed = MsgBox("Was a Generator used on this node?",4+32)
+		workDone = MsgBox("Was there any work done on this node?",4+32)
+		
+		If genUsed = 7 And workDone = 7 Then
+			ARForm.GetFieldByID(536871067).Value = "NYMA - Provider"
+		End If
+		
+		Snippet to possibly pull from polling page:
+		
+			Do Until Len(mac) = 12
+				mac = UCase(Trim(InputBox("Enter a MAC Address","Enter MAC")))
+				If mac = "" Then Exit Sub
+				If Len(mac) <> 12 Then MsgBox "Please Enter a valid Node or Hub",64
+			Loop
+			
+			'MsgBox "Loading may take a few seconds (as usual)",64
+			Set httpObj = CreateObject("Microsoft.XMLHTTP")
+			httpObj.open "GET", "http://tools.bisc.cv.net/cgi-bin/bounceping6.tcl?modem=" & mac, False
+			httpObj.send
+			
+			tempHeadendSetting= "ifalias"
+			characterReturn = 6
+			result = Mid(httpObj.responseText,InStr(1,httpObj.responseText,tempHeadendSetting,1)+23+Len(tempHeadendSetting),characterReturn)	'Distance may equal 23 plus characters in the title
+			MsgBox result
+			
+			tempHeadendSetting= "Query_MAC"
+			characterReturn = 17
+			result = Mid(httpObj.responseText,InStr(1,httpObj.responseText,tempHeadendSetting,1)+23+Len(tempHeadendSetting),characterReturn)	'Distance may equal 23 plus characters in the title
+			MsgBox result
+			
+			tempHeadendSetting= "Modem_IP_Address"
+			characterReturn = 14
+			result = Mid(httpObj.responseText,InStr(1,httpObj.responseText,tempHeadendSetting,1)+23+Len(tempHeadendSetting),characterReturn)	'Distance may equal 23 plus characters in the title
+			MsgBox result
+			
+		Snippet End
+-->
